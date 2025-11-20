@@ -7,94 +7,10 @@ function App() {
     const checkMobile = () => window.innerWidth <= 768 || 'ontouchstart' in window
     let isMobile = checkMobile()
     
-    // Services accordion functionality
+    // Services accordion functionality - click only (no auto-expand)
     const serviceItems = document.querySelectorAll('.service-modern')
     
-    // Intersection Observer for services auto-expand on mobile when centered
-    let servicesObserver = null
-    
-    const setupServicesObserver = () => {
-      // Cleanup existing observer
-      if (servicesObserver) {
-        servicesObserver.disconnect()
-        servicesObserver = null
-      }
-      
-      const currentIsMobile = checkMobile()
-      
-      if (currentIsMobile) {
-        // Debounce to prevent rapid toggling
-        let lastActiveItem = null
-        let debounceTimeout = null
-        
-        servicesObserver = new IntersectionObserver((entries) => {
-          // Clear any pending debounce
-          if (serviceDebounceTimeout) {
-            clearTimeout(serviceDebounceTimeout)
-          }
-          
-          // Find the item closest to center
-          let closestItem = null
-          let closestDistance = Infinity
-          
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const item = entry.target
-              const rect = entry.boundingClientRect
-              const viewportHeight = window.innerHeight
-              const cardCenter = rect.top + rect.height / 2
-              const viewportCenter = viewportHeight / 2
-              const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
-              const threshold = viewportHeight * 0.3 // 30% of viewport height from center
-              
-              // Track closest item to center
-              if (distanceFromCenter < threshold && distanceFromCenter < closestDistance) {
-                closestDistance = distanceFromCenter
-                closestItem = item
-              }
-            }
-          })
-          
-          // Debounce the activation
-          serviceDebounceTimeout = setTimeout(() => {
-            if (closestItem && closestItem !== lastActiveServiceItem) {
-              // Close all other items
-              serviceItems.forEach(i => {
-                if (i !== closestItem) {
-                  i.classList.remove('active')
-                }
-              })
-              // Expand the closest card
-              closestItem.classList.add('active')
-              lastActiveServiceItem = closestItem
-            }
-          }, 100) // 100ms debounce for smoother experience
-        }, {
-          threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
-          rootMargin: '-20% 0px -20% 0px' // Focus on center 60% of viewport (same as specializations)
-        })
-        
-        // Observe all service items
-        serviceItems.forEach(item => {
-          servicesObserver.observe(item)
-        })
-      }
-    }
-    
-    // Initial setup
-    setupServicesObserver()
-    
-    // Handle window resize for services
-    let servicesResizeTimeout
-    const handleServicesResize = () => {
-      clearTimeout(servicesResizeTimeout)
-      servicesResizeTimeout = setTimeout(() => {
-        setupServicesObserver()
-      }, 250)
-    }
-    window.addEventListener('resize', handleServicesResize)
-    
-    // Click handler for services (desktop and mobile fallback)
+    // Click handler for services
     serviceItems.forEach(item => {
       const header = item.querySelector('.service-modern-header')
       if (header) {
@@ -112,13 +28,6 @@ function App() {
               }
             })
             item.classList.add('active')
-            // On mobile, scroll to center the card
-            const currentIsMobile = checkMobile()
-            if (currentIsMobile) {
-              setTimeout(() => {
-                item.scrollIntoView({ behavior: 'smooth', block: 'center' })
-              }, 100)
-            }
           }
         })
       }
@@ -139,10 +48,6 @@ function App() {
     // Intersection Observer for auto-expand on mobile when card is centered
     let intersectionObserver = null
     
-    // Debounce variables for specializations (outside observer)
-    let lastActiveSpecItem = null
-    let specDebounceTimeout = null
-    
     const setupIntersectionObserver = () => {
       // Cleanup existing observer
       if (intersectionObserver) {
@@ -150,61 +55,34 @@ function App() {
         intersectionObserver = null
       }
       
-      // Reset debounce variables
-      lastActiveSpecItem = null
-      if (specDebounceTimeout) {
-        clearTimeout(specDebounceTimeout)
-        specDebounceTimeout = null
-      }
-      
       const currentIsMobile = checkMobile()
       
       if (currentIsMobile) {
         intersectionObserver = new IntersectionObserver((entries) => {
-          // Clear any pending debounce
-          if (specDebounceTimeout) {
-            clearTimeout(specDebounceTimeout)
-          }
-          
-          // Find the item closest to center
-          let closestItem = null
-          let closestDistance = Infinity
-          
           entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const item = entry.target
-              const rect = entry.boundingClientRect
-              const viewportHeight = window.innerHeight
-              const cardCenter = rect.top + rect.height / 2
-              const viewportCenter = viewportHeight / 2
-              const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
-              const threshold = viewportHeight * 0.3 // 30% of viewport height from center
-              
-              // Track closest item to center
-              if (distanceFromCenter < threshold && distanceFromCenter < closestDistance) {
-                closestDistance = distanceFromCenter
-                closestItem = item
-              }
-            }
-          })
-          
-          // Debounce the activation
-          specDebounceTimeout = setTimeout(() => {
-            if (closestItem && closestItem !== lastActiveSpecItem) {
+            const item = entry.target
+            const rect = entry.boundingClientRect
+            const viewportHeight = window.innerHeight
+            const cardCenter = rect.top + rect.height / 2
+            const viewportCenter = viewportHeight / 2
+            const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
+            const threshold = viewportHeight * 0.25 // 25% of viewport height from center
+            
+            // If card is centered in viewport (within threshold)
+            if (entry.isIntersecting && distanceFromCenter < threshold) {
               // Close all other items
               specItems.forEach(i => {
-                if (i !== closestItem) {
+                if (i !== item) {
                   i.classList.remove('active')
                 }
               })
-              // Expand the closest card
-              closestItem.classList.add('active')
-              lastActiveSpecItem = closestItem
+              // Expand this card
+              item.classList.add('active')
             }
-          }, 100) // 100ms debounce for smoother experience
+          })
         }, {
-          threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
-          rootMargin: '-20% 0px -20% 0px' // Focus on center 60% of viewport
+          threshold: [0, 0.25, 0.5, 0.75, 1],
+          rootMargin: '-15% 0px -15% 0px' // Focus on center 70% of viewport
         })
         
         // Observe all spec items
@@ -268,11 +146,7 @@ function App() {
       if (intersectionObserver) {
         intersectionObserver.disconnect()
       }
-      if (servicesObserver) {
-        servicesObserver.disconnect()
-      }
       window.removeEventListener('resize', handleResize)
-      window.removeEventListener('resize', handleServicesResize)
       document.removeEventListener('click', handleOutsideClick)
       document.removeEventListener('click', handleServicesOutsideClick)
     }
@@ -538,7 +412,7 @@ function App() {
                   <img src="https://img.icons8.com/ios-filled/100/000000/scales.png" alt="الترافع والتمثيل القضائي" className="service-modern-icon" />
                 </div>
                 <h3>الترافع والتمثيل القضائي</h3>
-                <span className="service-toggle">+</span>
+                <img src="https://img.icons8.com/?size=100&id=23540&format=png&color=000000" alt="expand" className="service-toggle-icon" />
               </div>
               <div className="service-modern-body">
                 <div className="service-modern-content">
@@ -555,7 +429,7 @@ function App() {
                   <img src="https://img.icons8.com/ios-filled/100/000000/consultation.png" alt="الاستشارات والدراسات القانونية" className="service-modern-icon" />
                 </div>
                 <h3>الاستشارات والدراسات القانونية</h3>
-                <span className="service-toggle">+</span>
+                <img src="https://img.icons8.com/?size=100&id=23540&format=png&color=000000" alt="expand" className="service-toggle-icon" />
               </div>
               <div className="service-modern-body">
                 <div className="service-modern-content">
@@ -572,7 +446,7 @@ function App() {
                   <img src="https://img.icons8.com/ios-filled/100/000000/contract.png" alt="العقود والاتفاقيات" className="service-modern-icon" />
                 </div>
                 <h3>العقود والاتفاقيات</h3>
-                <span className="service-toggle">+</span>
+                <img src="https://img.icons8.com/?size=100&id=23540&format=png&color=000000" alt="expand" className="service-toggle-icon" />
               </div>
               <div className="service-modern-body">
                 <div className="service-modern-content">
@@ -589,7 +463,7 @@ function App() {
                   <img src="https://img.icons8.com/ios-filled/100/000000/handshake.png" alt="التحكيم وتسوية المنازعات" className="service-modern-icon" />
                 </div>
                 <h3>التحكيم وتسوية المنازعات</h3>
-                <span className="service-toggle">+</span>
+                <img src="https://img.icons8.com/?size=100&id=23540&format=png&color=000000" alt="expand" className="service-toggle-icon" />
               </div>
               <div className="service-modern-body">
                 <div className="service-modern-content">
@@ -605,7 +479,7 @@ function App() {
                   <img src="https://img.icons8.com/ios-filled/100/000000/company.png" alt="خدمات تأسيس ودعم الشركات" className="service-modern-icon" />
                 </div>
                 <h3>خدمات تأسيس ودعم الشركات</h3>
-                <span className="service-toggle">+</span>
+                <img src="https://img.icons8.com/?size=100&id=23540&format=png&color=000000" alt="expand" className="service-toggle-icon" />
               </div>
               <div className="service-modern-body">
                 <div className="service-modern-content">
@@ -622,7 +496,7 @@ function App() {
                   <img src="https://img.icons8.com/ios-filled/100/000000/document.png" alt="خدمات التوثيق" className="service-modern-icon" />
                 </div>
                 <h3>خدمات التوثيق</h3>
-                <span className="service-toggle">+</span>
+                <img src="https://img.icons8.com/?size=100&id=23540&format=png&color=000000" alt="expand" className="service-toggle-icon" />
               </div>
               <div className="service-modern-body">
                 <div className="service-modern-content">
@@ -640,7 +514,7 @@ function App() {
                   <img src="https://img.icons8.com/ios-filled/100/000000/money-bag.png" alt="خدمات التنفيذ والتحصيل" className="service-modern-icon" />
                 </div>
                 <h3>خدمات التنفيذ والتحصيل</h3>
-                <span className="service-toggle">+</span>
+                <img src="https://img.icons8.com/?size=100&id=23540&format=png&color=000000" alt="expand" className="service-toggle-icon" />
               </div>
               <div className="service-modern-body">
                 <div className="service-modern-content">
