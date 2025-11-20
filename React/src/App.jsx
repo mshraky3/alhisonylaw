@@ -1,6 +1,62 @@
 import './App.css'
+import { useEffect } from 'react'
 
 function App() {
+  useEffect(() => {
+    // Services accordion functionality
+    const serviceItems = document.querySelectorAll('.service-modern')
+    serviceItems.forEach(item => {
+      const header = item.querySelector('.service-modern-header')
+      if (header) {
+        header.addEventListener('click', () => {
+          const isActive = item.classList.contains('active')
+          // Close all items
+          serviceItems.forEach(i => i.classList.remove('active'))
+          // Open clicked item if it wasn't active
+          if (!isActive) {
+            item.classList.add('active')
+          }
+        })
+      }
+    })
+
+    // Specializations click to expand details
+    const specItems = document.querySelectorAll('.spec-item')
+    specItems.forEach(item => {
+      // Click handler for mobile and desktop
+      item.addEventListener('click', (e) => {
+        e.stopPropagation()
+        const isActive = item.classList.contains('active')
+        // Toggle active state
+        if (isActive) {
+          item.classList.remove('active')
+        } else {
+          // Close all other items
+          specItems.forEach(i => {
+            if (i !== item) {
+              i.classList.remove('active')
+            }
+          })
+          item.classList.add('active')
+        }
+      })
+
+      // Prevent hover expansion on touch devices
+      if ('ontouchstart' in window) {
+        item.addEventListener('touchstart', (e) => {
+          // Touch devices use click only
+        })
+      }
+    })
+
+    // Close expanded items when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.spec-item')) {
+        specItems.forEach(item => item.classList.remove('active'))
+      }
+    })
+  }, [])
+
   return (
     <div className="app" dir="rtl">
       {/* Header */}
@@ -55,218 +111,303 @@ function App() {
       </section>
 
       {/* Specializations Section */}
-      <section id="specializations" className="services">
+      <section id="specializations" className="specializations-modern">
         <div className="section-header">
             <span className="section-badge">قطاعات التخصص</span>
             <h2 className="section-title">مجالات الممارسة القانونية</h2>
             <p className="section-description">نختص في مختلف المجالات القانونية لتلبية احتياجاتك</p>
           </div>
-          <div className="services-grid">
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/?size=100&id=qEK2pqenBa22&format=png&color=000000" alt="الأفراد والأحوال الشخصية" className="service-icon" />
+          <div className="specializations-masonry">
+            <div className="spec-item" data-category="personal">
+              <div className="spec-visual">
+                <div className="spec-icon-bg"></div>
+                <img src="https://img.icons8.com/?size=100&id=qEK2pqenBa22&format=png&color=000000" alt="الأفراد والأحوال الشخصية" className="spec-icon" />
+                <div className="spec-number">01</div>
               </div>
-              <h3>الأفراد والأحوال الشخصية</h3>
-              <p>
-                <strong>قضايا الأحوال الشخصية:</strong> الطلاق، الخلع، فسخ النكاح، الحضانة والزيارة، النفقات، وتقسيم الميراث.<br/><br/>
-                <strong>القضايا المدنية والحقوقية:</strong> المطالبات المالية، التعويضات عن الأضرار، ونزاعات الأراضي.
-              </p>
+              <div className="spec-content">
+                <h3>الأفراد والأحوال الشخصية</h3>
+                <div className="spec-preview">قضايا الأحوال الشخصية والمدنية</div>
+                <div className="spec-details">
+                  <div className="spec-detail-item"><strong>قضايا الأحوال الشخصية:</strong> الطلاق، الخلع، فسخ النكاح، الحضانة والزيارة، النفقات، وتقسيم الميراث.</div>
+                  <div className="spec-detail-item"><strong>القضايا المدنية والحقوقية:</strong> المطالبات المالية، التعويضات عن الأضرار، ونزاعات الأراضي.</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/ios-filled/100/000000/scales.png" alt="القضايا الجنائية" className="service-icon" />
+            <div className="spec-item" data-category="criminal">
+              <div className="spec-visual">
+                <div className="spec-icon-bg"></div>
+                <img src="https://img.icons8.com/ios-filled/100/000000/scales.png" alt="القضايا الجنائية" className="spec-icon" />
+                <div className="spec-number">02</div>
               </div>
-              <h3>القضايا الجنائية</h3>
-              <p>
-                <strong>الجرائم المعلوماتية والإلكترونية:</strong> الاحتيال الإلكتروني، الابتزاز الإلكتروني، اختراق الأنظمة، والتشهير الإلكتروني.<br/><br/>
-                <strong>جرائم الاعتداء:</strong> قضايا الاعتداء البدني، الاعتداء على النفس، التهديد، والتحرش.<br/><br/>
-                <strong>جرائم الأموال:</strong> السرقة، النصب والاحتيال، خيانة الأمانة، والاختلاس.<br/><br/>
-                <strong>جرائم المخدرات:</strong> الدفاع في قضايا الاتجار والحيازة والاستخدام.<br/><br/>
-                <strong>جرائم الفساد المالي:</strong> الرشوة، غسيل الأموال، التهرب الضريبي، والاستغلال الوظيفي.<br/><br/>
-                <strong>جرائم الأمن:</strong> قضايا الأمن الوطني، الإرهاب، والتحريض على الفتنة.
-              </p>
+              <div className="spec-content">
+                <h3>القضايا الجنائية</h3>
+                <div className="spec-preview">الدفاع في مختلف أنواع الجرائم</div>
+                <div className="spec-details">
+                  <div className="spec-detail-item"><strong>الجرائم المعلوماتية والإلكترونية:</strong> الاحتيال الإلكتروني، الابتزاز الإلكتروني، اختراق الأنظمة، والتشهير الإلكتروني.</div>
+                  <div className="spec-detail-item"><strong>جرائم الاعتداء:</strong> قضايا الاعتداء البدني، الاعتداء على النفس، التهديد، والتحرش.</div>
+                  <div className="spec-detail-item"><strong>جرائم الأموال:</strong> السرقة، النصب والاحتيال، خيانة الأمانة، والاختلاس.</div>
+                  <div className="spec-detail-item"><strong>جرائم المخدرات:</strong> الدفاع في قضايا الاتجار والحيازة والاستخدام.</div>
+                  <div className="spec-detail-item"><strong>جرائم الفساد المالي:</strong> الرشوة، غسيل الأموال، التهرب الضريبي، والاستغلال الوظيفي.</div>
+                  <div className="spec-detail-item"><strong>جرائم الأمن:</strong> قضايا الأمن الوطني، الإرهاب، والتحريض على الفتنة.</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/?size=100&id=fNBnDhvTtPhD&format=png&color=000000" alt="قطاع الأعمال والشركات" className="service-icon" />
+            <div className="spec-item spec-large" data-category="business">
+              <div className="spec-visual">
+                <div className="spec-icon-bg"></div>
+                <img src="https://img.icons8.com/?size=100&id=fNBnDhvTtPhD&format=png&color=000000" alt="قطاع الأعمال والشركات" className="spec-icon" />
+                <div className="spec-number">03</div>
               </div>
-              <h3>قطاع الأعمال والشركات</h3>
-              <p>
-                <strong>القضايا التجارية:</strong> المنازعات بين الشركاء، قضايا الإفلاس والتصفية، الأوراق التجارية، والمنافسة غير المشروعة.<br/><br/>
-                <strong>القضايا المالية والمصرفية:</strong> المنازعات مع البنوك وشركات التمويل، منازعات الأسهم والسوق المالية.<br/><br/>
-                <strong>القضايا العمالية:</strong> صياغة لوائح تنظيم العمل، المنازعات العمالية (فصل تعسفي، أجور، مكافأة نهاية الخدمة).<br/><br/>
-                <strong>الملكية الفكرية:</strong> حماية العلامات التجارية، براءات الاختراع، حقوق المؤلف والنشر، والأسرار التجارية.
-              </p>
+              <div className="spec-content">
+                <h3>قطاع الأعمال والشركات</h3>
+                <div className="spec-preview">القضايا التجارية والمالية</div>
+                <div className="spec-details">
+                  <div className="spec-detail-item"><strong>القضايا التجارية:</strong> المنازعات بين الشركاء، قضايا الإفلاس والتصفية، الأوراق التجارية، والمنافسة غير المشروعة.</div>
+                  <div className="spec-detail-item"><strong>القضايا المالية والمصرفية:</strong> المنازعات مع البنوك وشركات التمويل، منازعات الأسهم والسوق المالية.</div>
+                  <div className="spec-detail-item"><strong>القضايا العمالية:</strong> صياغة لوائح تنظيم العمل، المنازعات العمالية (فصل تعسفي، أجور، مكافأة نهاية الخدمة).</div>
+                  <div className="spec-detail-item"><strong>الملكية الفكرية:</strong> حماية العلامات التجارية، براءات الاختراع، حقوق المؤلف والنشر، والأسرار التجارية.</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/?size=100&id=49636&format=png&color=000000" alt="العقارات والمقاولات" className="service-icon" />
+            <div className="spec-item spec-large" data-category="real-estate">
+              <div className="spec-visual">
+                <div className="spec-icon-bg"></div>
+                <img src="https://img.icons8.com/?size=100&id=49636&format=png&color=000000" alt="العقارات والمقاولات" className="spec-icon" />
+                <div className="spec-number">04</div>
               </div>
-              <h3>العقارات والمقاولات</h3>
-              <p>
-                <strong>القضايا العقارية:</strong> نزاعات الملكية، دعاوى الإخلاء، منازعات الإيجار، والمساهمات العقارية.<br/><br/>
-                <strong>قضايا المقاولات والإنشاءات:</strong> النزاعات الفنية والهندسية، عقود "فيديك"، ومنازعات المطورين العقاريين.
-              </p>
+              <div className="spec-content">
+                <h3>العقارات والمقاولات</h3>
+                <div className="spec-preview">نزاعات العقارات والإنشاءات</div>
+                <div className="spec-details">
+                  <div className="spec-detail-item"><strong>القضايا العقارية:</strong> نزاعات الملكية، دعاوى الإخلاء، منازعات الإيجار، والمساهمات العقارية.</div>
+                  <div className="spec-detail-item"><strong>قضايا المقاولات والإنشاءات:</strong> النزاعات الفنية والهندسية، عقود "فيديك"، ومنازعات المطورين العقاريين.</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/?size=100&id=17855&format=png&color=000000" alt="القضاء الإداري والحكومي" className="service-icon" />
+            <div className="spec-item" data-category="administrative">
+              <div className="spec-visual">
+                <div className="spec-icon-bg"></div>
+                <img src="https://img.icons8.com/?size=100&id=17855&format=png&color=000000" alt="القضاء الإداري والحكومي" className="spec-icon" />
+                <div className="spec-number">05</div>
               </div>
-              <h3>القضاء الإداري والحكومي</h3>
-              <p>
-                <strong>القضايا الإدارية:</strong> الترافع أمام ديوان المظالم، إلغاء القرارات الإدارية، والتعويض من الجهات الحكومية.<br/><br/>
-                <strong>الزكاة والضريبة:</strong> الاعتراضات أمام لجان الزكاة والضريبة والجمارك.
-              </p>
+              <div className="spec-content">
+                <h3>القضاء الإداري والحكومي</h3>
+                <div className="spec-preview">الترافع أمام الديوان واللجان</div>
+                <div className="spec-details">
+                  <div className="spec-detail-item"><strong>القضايا الإدارية:</strong> الترافع أمام ديوان المظالم، إلغاء القرارات الإدارية، والتعويض من الجهات الحكومية.</div>
+                  <div className="spec-detail-item"><strong>الزكاة والضريبة:</strong> الاعتراضات أمام لجان الزكاة والضريبة والجمارك.</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/?size=100&id=hwWsopzNm7N2&format=png&color=000000" alt="قضايا التأمين" className="service-icon" />
+            <div className="spec-item" data-category="insurance">
+              <div className="spec-visual">
+                <div className="spec-icon-bg"></div>
+                <img src="https://img.icons8.com/?size=100&id=hwWsopzNm7N2&format=png&color=000000" alt="قضايا التأمين" className="spec-icon" />
+                <div className="spec-number">06</div>
               </div>
-              <h3>قضايا التأمين</h3>
-              <p>
-                <strong>منازعات التأمين:</strong> المنازعات مع شركات التأمين (تأمين طبي، تأمين مركبات، تأمين أضرار، تأمين حياة).<br/><br/>
-                <strong>المطالبات التأمينية:</strong> متابعة مطالبات التأمين ورفض المطالبات غير المبررة.<br/><br/>
-                <strong>التأمين التجاري:</strong> منازعات التأمين على الممتلكات والمسؤولية المدنية للشركات.
-              </p>
+              <div className="spec-content">
+                <h3>قضايا التأمين</h3>
+                <div className="spec-preview">منازعات التأمين والمطالبات</div>
+                <div className="spec-details">
+                  <div className="spec-detail-item"><strong>منازعات التأمين:</strong> المنازعات مع شركات التأمين (تأمين طبي، تأمين مركبات، تأمين أضرار، تأمين حياة).</div>
+                  <div className="spec-detail-item"><strong>المطالبات التأمينية:</strong> متابعة مطالبات التأمين ورفض المطالبات غير المبررة.</div>
+                  <div className="spec-detail-item"><strong>التأمين التجاري:</strong> منازعات التأمين على الممتلكات والمسؤولية المدنية للشركات.</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/ios-filled/100/1a4d3a/hospital.png" alt="القانون الطبي والمسؤولية الطبية" className="service-icon" />
+            <div className="spec-item spec-large" data-category="medical">
+              <div className="spec-visual">
+                <div className="spec-icon-bg"></div>
+                <img src="https://img.icons8.com/ios-filled/100/1a4d3a/hospital.png" alt="القانون الطبي والمسؤولية الطبية" className="spec-icon" />
+                <div className="spec-number">07</div>
               </div>
-              <h3>القانون الطبي والمسؤولية الطبية</h3>
-              <p>
-                <strong>قضايا الأخطاء الطبية:</strong> الدفاع عن الأطباء والمراكز الطبية في قضايا الأخطاء الطبية.<br/><br/>
-                <strong>حقوق المرضى:</strong> تمثيل المرضى في قضايا التعويض عن الأضرار الطبية.<br/><br/>
-                <strong>التراخيص الطبية:</strong> استخراج التراخيص الطبية والاعتراض على قرارات الهيئة السعودية للتخصصات الصحية.
-              </p>
+              <div className="spec-content">
+                <h3>القانون الطبي والمسؤولية الطبية</h3>
+                <div className="spec-preview">قضايا الأخطاء الطبية وحقوق المرضى</div>
+                <div className="spec-details">
+                  <div className="spec-detail-item"><strong>قضايا الأخطاء الطبية:</strong> الدفاع عن الأطباء والمراكز الطبية في قضايا الأخطاء الطبية.</div>
+                  <div className="spec-detail-item"><strong>حقوق المرضى:</strong> تمثيل المرضى في قضايا التعويض عن الأضرار الطبية.</div>
+                  <div className="spec-detail-item"><strong>التراخيص الطبية:</strong> استخراج التراخيص الطبية والاعتراض على قرارات الهيئة السعودية للتخصصات الصحية.</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/?size=100&id=02L7uHUVDizl&format=png&color=000000" alt="قضايا المستهلك وحماية المستهلك" className="service-icon" />
+            <div className="spec-item" data-category="consumer">
+              <div className="spec-visual">
+                <div className="spec-icon-bg"></div>
+                <img src="https://img.icons8.com/?size=100&id=02L7uHUVDizl&format=png&color=000000" alt="قضايا المستهلك وحماية المستهلك" className="spec-icon" />
+                <div className="spec-number">08</div>
               </div>
-              <h3>قضايا المستهلك وحماية المستهلك</h3>
-              <p>
-                <strong>منازعات المستهلكين:</strong> تمثيل المستهلكين في منازعاتهم مع التجار والشركات.<br/><br/>
-                <strong>قضايا الجودة والضمان:</strong> المطالبة بحقوق الضمان وضمان الجودة للمنتجات والخدمات.<br/><br/>
-                <strong>الإعلانات المضللة:</strong> قضايا الإعلانات الكاذبة والممارسات التجارية غير العادلة.
-              </p>
+              <div className="spec-content">
+                <h3>قضايا المستهلك وحماية المستهلك</h3>
+                <div className="spec-preview">حماية حقوق المستهلكين</div>
+                <div className="spec-details">
+                  <div className="spec-detail-item"><strong>منازعات المستهلكين:</strong> تمثيل المستهلكين في منازعاتهم مع التجار والشركات.</div>
+                  <div className="spec-detail-item"><strong>قضايا الجودة والضمان:</strong> المطالبة بحقوق الضمان وضمان الجودة للمنتجات والخدمات.</div>
+                  <div className="spec-detail-item"><strong>الإعلانات المضللة:</strong> قضايا الإعلانات الكاذبة والممارسات التجارية غير العادلة.</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/ios-filled/100/1a4d3a/lock.png" alt="الأمن السيبراني وحماية البيانات" className="service-icon" />
+            <div className="spec-item" data-category="cyber">
+              <div className="spec-visual">
+                <div className="spec-icon-bg"></div>
+                <img src="https://img.icons8.com/ios-filled/100/1a4d3a/lock.png" alt="الأمن السيبراني وحماية البيانات" className="spec-icon" />
+                <div className="spec-number">09</div>
               </div>
-              <h3>الأمن السيبراني وحماية البيانات</h3>
-              <p>
-                <strong>قضايا الجرائم الإلكترونية:</strong> الدفاع في قضايا الجرائم المعلوماتية والاحتيال الإلكتروني.<br/><br/>
-                <strong>حماية البيانات:</strong> الامتثال لنظام حماية البيانات الشخصية والخصوصية.<br/><br/>
-                <strong>الابتزاز الإلكتروني:</strong> معالجة قضايا الابتزاز والتهديد الإلكتروني.
-              </p>
+              <div className="spec-content">
+                <h3>الأمن السيبراني وحماية البيانات</h3>
+                <div className="spec-preview">الجرائم الإلكترونية وحماية البيانات</div>
+                <div className="spec-details">
+                  <div className="spec-detail-item"><strong>قضايا الجرائم الإلكترونية:</strong> الدفاع في قضايا الجرائم المعلوماتية والاحتيال الإلكتروني.</div>
+                  <div className="spec-detail-item"><strong>حماية البيانات:</strong> الامتثال لنظام حماية البيانات الشخصية والخصوصية.</div>
+                  <div className="spec-detail-item"><strong>الابتزاز الإلكتروني:</strong> معالجة قضايا الابتزاز والتهديد الإلكتروني.</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/?size=100&id=JhJh1oz0GRY9&format=png&color=000000" alt="قضايا النقل والمواصلات" className="service-icon" />
+            <div className="spec-item spec-large" data-category="transport">
+              <div className="spec-visual">
+                <div className="spec-icon-bg"></div>
+                <img src="https://img.icons8.com/?size=100&id=JhJh1oz0GRY9&format=png&color=000000" alt="قضايا النقل والمواصلات" className="spec-icon" />
+                <div className="spec-number">10</div>
               </div>
-              <h3>قضايا النقل والمواصلات</h3>
-              <p>
-                <strong>حوادث المركبات:</strong> قضايا الحوادث المرورية والتعويضات.<br/><br/>
-                <strong>النقل الجوي:</strong> منازعات شركات الطيران والركاب.<br/><br/>
-                <strong>النقل البحري:</strong> قضايا الشحن البحري والمنازعات التجارية البحرية.
-              </p>
+              <div className="spec-content">
+                <h3>قضايا النقل والمواصلات</h3>
+                <div className="spec-preview">حوادث المركبات والنقل</div>
+                <div className="spec-details">
+                  <div className="spec-detail-item"><strong>حوادث المركبات:</strong> قضايا الحوادث المرورية والتعويضات.</div>
+                  <div className="spec-detail-item"><strong>النقل الجوي:</strong> منازعات شركات الطيران والركاب.</div>
+                  <div className="spec-detail-item"><strong>النقل البحري:</strong> قضايا الشحن البحري والمنازعات التجارية البحرية.</div>
+                </div>
+              </div>
             </div>
           </div>
       </section>
 
       {/* Legal Services Section */}
-      <section id="services" className="services">
+      <section id="services" className="services-modern">
         <div className="section-header">
             <span className="section-badge">الخدمات القانونية</span>
             <h2 className="section-title">طبيعة العمل والخدمات المقدمة</h2>
             <p className="section-description">نقدم خدمات قانونية متكاملة بأساليب احترافية</p>
           </div>
-          <div className="services-grid">
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/ios-filled/100/000000/scales.png" alt="الترافع والتمثيل القضائي" className="service-icon" />
+          <div className="services-showcase">
+            <div className="service-modern">
+              <div className="service-modern-header">
+                <div className="service-modern-icon-wrapper">
+                  <img src="https://img.icons8.com/ios-filled/100/000000/scales.png" alt="الترافع والتمثيل القضائي" className="service-modern-icon" />
+                </div>
+                <h3>الترافع والتمثيل القضائي</h3>
+                <span className="service-toggle">+</span>
               </div>
-              <h3>الترافع والتمثيل القضائي</h3>
-              <p>
-                تمثيل الموكلين أمام كافة المحاكم (العامة، التجارية، العمالية، الجزائية، الأحوال الشخصية).<br/><br/>
-                التمثيل أمام اللجان شبه القضائية (لجان المصرفية، التأمين، الأوراق المالية، الضرائب).<br/><br/>
-                حضور جلسات التحقيق أمام النيابة العامة ومراكز الشرطة.<br/><br/>
-                إعداد اللوائح الاعتراضية، مذكرات الجواب، والتماس إعادة النظر.
-              </p>
+              <div className="service-modern-body">
+                <div className="service-modern-content">
+                  <div className="service-modern-item">تمثيل الموكلين أمام كافة المحاكم (العامة، التجارية، العمالية، الجزائية، الأحوال الشخصية)</div>
+                  <div className="service-modern-item">التمثيل أمام اللجان شبه القضائية (لجان المصرفية، التأمين، الأوراق المالية، الضرائب)</div>
+                  <div className="service-modern-item">حضور جلسات التحقيق أمام النيابة العامة ومراكز الشرطة</div>
+                  <div className="service-modern-item">إعداد اللوائح الاعتراضية، مذكرات الجواب، والتماس إعادة النظر</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/ios-filled/100/000000/consultation.png" alt="الاستشارات والدراسات القانونية" className="service-icon" />
+            <div className="service-modern">
+              <div className="service-modern-header">
+                <div className="service-modern-icon-wrapper">
+                  <img src="https://img.icons8.com/ios-filled/100/000000/consultation.png" alt="الاستشارات والدراسات القانونية" className="service-modern-icon" />
+                </div>
+                <h3>الاستشارات والدراسات القانونية</h3>
+                <span className="service-toggle">+</span>
               </div>
-              <h3>الاستشارات والدراسات القانونية</h3>
-              <p>
-                تقديم الرأي القانوني المكتوب والشفهي في كافة المجالات.<br/><br/>
-                دراسات الجدوى القانونية للمشاريع الجديدة.<br/><br/>
-                خدمة "المستشار القانوني الخارجي" للشركات (عقود سنوية).<br/><br/>
-                <strong>الحوكمة والامتثال:</strong> ضمان التزام الشركات بالأنظمة السعودية الجديدة ولوائح حوكمة الشركات.
-              </p>
+              <div className="service-modern-body">
+                <div className="service-modern-content">
+                  <div className="service-modern-item">تقديم الرأي القانوني المكتوب والشفهي في كافة المجالات</div>
+                  <div className="service-modern-item">دراسات الجدوى القانونية للمشاريع الجديدة</div>
+                  <div className="service-modern-item">خدمة "المستشار القانوني الخارجي" للشركات (عقود سنوية)</div>
+                  <div className="service-modern-item"><strong>الحوكمة والامتثال:</strong> ضمان التزام الشركات بالأنظمة السعودية الجديدة ولوائح حوكمة الشركات</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/ios-filled/100/000000/contract.png" alt="العقود والاتفاقيات" className="service-icon" />
+            <div className="service-modern">
+              <div className="service-modern-header">
+                <div className="service-modern-icon-wrapper">
+                  <img src="https://img.icons8.com/ios-filled/100/000000/contract.png" alt="العقود والاتفاقيات" className="service-modern-icon" />
+                </div>
+                <h3>العقود والاتفاقيات</h3>
+                <span className="service-toggle">+</span>
               </div>
-              <h3>العقود والاتفاقيات</h3>
-              <p>
-                صياغة العقود التجارية (الفرنشايز، التوزيع، التوريد، الشراكة).<br/><br/>
-                صياغة عقود العمل واللوائح الداخلية للمنشآت.<br/><br/>
-                مراجعة العقود وتدقيقها لضمان حماية حقوق الموكل وتقليل المخاطر.<br/><br/>
-                إدارة العقود ومتابعة تجديدها وتنفيذ بنودها.
-              </p>
+              <div className="service-modern-body">
+                <div className="service-modern-content">
+                  <div className="service-modern-item">صياغة العقود التجارية (الفرنشايز، التوزيع، التوريد، الشراكة)</div>
+                  <div className="service-modern-item">صياغة عقود العمل واللوائح الداخلية للمنشآت</div>
+                  <div className="service-modern-item">مراجعة العقود وتدقيقها لضمان حماية حقوق الموكل وتقليل المخاطر</div>
+                  <div className="service-modern-item">إدارة العقود ومتابعة تجديدها وتنفيذ بنودها</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/ios-filled/100/000000/handshake.png" alt="التحكيم وتسوية المنازعات" className="service-icon" />
+            <div className="service-modern">
+              <div className="service-modern-header">
+                <div className="service-modern-icon-wrapper">
+                  <img src="https://img.icons8.com/ios-filled/100/000000/handshake.png" alt="التحكيم وتسوية المنازعات" className="service-modern-icon" />
+                </div>
+                <h3>التحكيم وتسوية المنازعات</h3>
+                <span className="service-toggle">+</span>
               </div>
-              <h3>التحكيم وتسوية المنازعات</h3>
-              <p>
-                الوساطة العقارية والتجارية للوصول لحلول ودية.<br/><br/>
-                التمثيل في قضايا التحكيم التجاري المحلي والدولي.<br/><br/>
-                صياغة مشارط التحكيم في العقود.
-              </p>
+              <div className="service-modern-body">
+                <div className="service-modern-content">
+                  <div className="service-modern-item">الوساطة العقارية والتجارية للوصول لحلول ودية</div>
+                  <div className="service-modern-item">التمثيل في قضايا التحكيم التجاري المحلي والدولي</div>
+                  <div className="service-modern-item">صياغة مشارط التحكيم في العقود</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/ios-filled/100/000000/company.png" alt="خدمات تأسيس ودعم الشركات" className="service-icon" />
+            <div className="service-modern">
+              <div className="service-modern-header">
+                <div className="service-modern-icon-wrapper">
+                  <img src="https://img.icons8.com/ios-filled/100/000000/company.png" alt="خدمات تأسيس ودعم الشركات" className="service-modern-icon" />
+                </div>
+                <h3>خدمات تأسيس ودعم الشركات</h3>
+                <span className="service-toggle">+</span>
               </div>
-              <h3>خدمات تأسيس ودعم الشركات</h3>
-              <p>
-                <strong>تأسيس الشركات:</strong> (مساهمة، محدودة، تضامنية) وإصدار السجلات التجارية.<br/><br/>
-                <strong>الاستثمار الأجنبي:</strong> استخراج تراخيص وزارة الاستثمار (MISA) وتأسيس شركات المستثمر الأجنبي.<br/><br/>
-                <strong>الاندماج والاستحواذ:</strong> الفحص النافي للجهالة (Due Diligence)، وعقود الاستحواذ.<br/><br/>
-                <strong>تسجيل العلامات التجارية:</strong> والنماذج الصناعية لدى الهيئة السعودية للملكية الفكرية.
-              </p>
+              <div className="service-modern-body">
+                <div className="service-modern-content">
+                  <div className="service-modern-item"><strong>تأسيس الشركات:</strong> (مساهمة، محدودة، تضامنية) وإصدار السجلات التجارية</div>
+                  <div className="service-modern-item"><strong>الاستثمار الأجنبي:</strong> استخراج تراخيص وزارة الاستثمار (MISA) وتأسيس شركات المستثمر الأجنبي</div>
+                  <div className="service-modern-item"><strong>الاندماج والاستحواذ:</strong> الفحص النافي للجهالة (Due Diligence)، وعقود الاستحواذ</div>
+                  <div className="service-modern-item"><strong>تسجيل العلامات التجارية:</strong> والنماذج الصناعية لدى الهيئة السعودية للملكية الفكرية</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/ios-filled/100/000000/document.png" alt="خدمات التوثيق" className="service-icon" />
+            <div className="service-modern">
+              <div className="service-modern-header">
+                <div className="service-modern-icon-wrapper">
+                  <img src="https://img.icons8.com/ios-filled/100/000000/document.png" alt="خدمات التوثيق" className="service-modern-icon" />
+                </div>
+                <h3>خدمات التوثيق</h3>
+                <span className="service-toggle">+</span>
               </div>
-              <h3>خدمات التوثيق</h3>
-              <p>
-                <strong>العقارات:</strong> إفراغ الصكوك العقارية، توثيق الرهن وفكه.<br/><br/>
-                <strong>الشركات:</strong> توثيق عقود التأسيس وقرارات الشركاء وملاحق التعديل.<br/><br/>
-                <strong>الوكالات:</strong> إصدار وفسخ الوكالات للأفراد والشركات.<br/><br/>
-                <strong>الإقرارات:</strong> توثيق الإقرارات بالديون المالية وسدادها.<br/><br/>
-                <strong>الأحوال الشخصية:</strong> توثيق عقود الزواج والطلاق والخلع والرجعة (للمرخصين).
-              </p>
+              <div className="service-modern-body">
+                <div className="service-modern-content">
+                  <div className="service-modern-item"><strong>العقارات:</strong> إفراغ الصكوك العقارية، توثيق الرهن وفكه</div>
+                  <div className="service-modern-item"><strong>الشركات:</strong> توثيق عقود التأسيس وقرارات الشركاء وملاحق التعديل</div>
+                  <div className="service-modern-item"><strong>الوكالات:</strong> إصدار وفسخ الوكالات للأفراد والشركات</div>
+                  <div className="service-modern-item"><strong>الإقرارات:</strong> توثيق الإقرارات بالديون المالية وسدادها</div>
+                  <div className="service-modern-item"><strong>الأحوال الشخصية:</strong> توثيق عقود الزواج والطلاق والخلع والرجعة (للمرخصين)</div>
+                </div>
+              </div>
             </div>
-            <div className="service-card">
-              <div className="service-icon-wrapper">
-                <img src="https://img.icons8.com/ios-filled/100/000000/money-bag.png" alt="خدمات التنفيذ والتحصيل" className="service-icon" />
+            <div className="service-modern">
+              <div className="service-modern-header">
+                <div className="service-modern-icon-wrapper">
+                  <img src="https://img.icons8.com/ios-filled/100/000000/money-bag.png" alt="خدمات التنفيذ والتحصيل" className="service-modern-icon" />
+                </div>
+                <h3>خدمات التنفيذ والتحصيل</h3>
+                <span className="service-toggle">+</span>
               </div>
-              <h3>خدمات التنفيذ والتحصيل</h3>
-              <p>
-                تنفيذ الأحكام القضائية المحلية والأجنبية وأحكام المحكمين.<br/><br/>
-                تنفيذ الأوراق التجارية (الشيكات، السندات لأمر، الكمبيالات) عبر محكمة التنفيذ.<br/><br/>
-                متابعة إجراءات الحجز على الأموال والمنع من السفر والإفصاح عن الأصول.<br/><br/>
-                تحصيل الديون المتعثرة للشركات والأفراد (تسوية أو قضاءً).
-              </p>
+              <div className="service-modern-body">
+                <div className="service-modern-content">
+                  <div className="service-modern-item">تنفيذ الأحكام القضائية المحلية والأجنبية وأحكام المحكمين</div>
+                  <div className="service-modern-item">تنفيذ الأوراق التجارية (الشيكات، السندات لأمر، الكمبيالات) عبر محكمة التنفيذ</div>
+                  <div className="service-modern-item">متابعة إجراءات الحجز على الأموال والمنع من السفر والإفصاح عن الأصول</div>
+                  <div className="service-modern-item">تحصيل الديون المتعثرة للشركات والأفراد (تسوية أو قضاءً)</div>
+                </div>
+              </div>
             </div>
           </div>
       </section>
