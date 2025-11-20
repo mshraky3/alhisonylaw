@@ -572,7 +572,10 @@ body {
   backdrop-filter: blur(20px);
   border-radius: 24px;
   overflow: visible;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Only transition specific properties to avoid conflicts with spec-details animation */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(212, 175, 55, 0.2);
   cursor: pointer;
   min-height: 280px;
@@ -759,15 +762,19 @@ body {
   max-height: 0;
   overflow: hidden;
   opacity: 1;
-  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s,
-              margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
   margin-top: 0;
+  /* No delays on collapse - smooth immediate collapse */
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              margin-top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .spec-item.active .spec-details {
   max-height: 2000px;
   opacity: 1;
   margin-top: 1rem;
+  /* Small delay only on expand for smoother feel */
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.05s,
+              margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.05s;
 }
 
 /* Only show details on hover for desktop, but keep click for mobile */
@@ -827,11 +834,17 @@ body {
     color: var(--gold);
   }
   
-  /* Ensure smooth transitions on mobile */
+  /* Ensure smooth transitions on mobile - no delays on collapse */
   .spec-details {
-    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s,
-                margin-top 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                margin-top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: max-height;
+  }
+  
+  .spec-item.active .spec-details {
+    /* Small delay only on expand */
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.05s,
+                margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.05s;
   }
   
   /* Prevent cards from disappearing when scrolling - ensure they stay visible */
