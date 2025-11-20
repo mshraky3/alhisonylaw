@@ -5,28 +5,25 @@ function App() {
     <div className="app" dir="rtl">
       {/* Header */}
       <header className="header">
-        <div className="container">
-          <div className="header-content">
-            <div className="logo-container">
-              <img src="/logo_without_bg.png" alt="شركة صالح الحيسوني للمحاماة" className="logo" />
-              <h1 className="company-name">شركة صالح الحيسوني للمحاماة</h1>
-            </div>
-            <nav className="nav">
-              <a href="#home">الرئيسية</a>
-              <a href="#specializations">التخصصات</a>
-              <a href="#services">الخدمات</a>
-              <a href="#about">من نحن</a>
-              <a href="#contact">اتصل بنا</a>
-            </nav>
+        <div className="header-content">
+          <div className="logo-container">
+            <img src="/logo_without_bg.png" alt="شركة صالح الحيسوني للمحاماة" className="logo" />
+            <h1 className="company-name">شركة صالح الحيسوني للمحاماة</h1>
           </div>
+          <nav className="nav">
+            <a href="#home">الرئيسية</a>
+            <a href="#specializations">التخصصات</a>
+            <a href="#services">الخدمات</a>
+            <a href="#about">من نحن</a>
+            <a href="#contact">اتصل بنا</a>
+          </nav>
         </div>
       </header>
 
       {/* Hero Section */}
       <section id="home" className="hero">
         <div className="hero-pattern"></div>
-        <div className="container">
-          <div className="hero-content">
+        <div className="hero-content">
             <div className="hero-badge">شركة قانونية معتمدة</div>
             <h2 className="hero-title">
               <span className="title-highlight">العدالة</span> والتميز في الخدمة القانونية
@@ -55,13 +52,11 @@ function App() {
               <div className="stat-label">رضا العملاء</div>
             </div>
           </div>
-        </div>
       </section>
 
       {/* Specializations Section */}
       <section id="specializations" className="services">
-        <div className="container">
-          <div className="section-header">
+        <div className="section-header">
             <span className="section-badge">قطاعات التخصص</span>
             <h2 className="section-title">مجالات الممارسة القانونية</h2>
             <p className="section-description">نختص في مختلف المجالات القانونية لتلبية احتياجاتك</p>
@@ -179,13 +174,11 @@ function App() {
               </p>
             </div>
           </div>
-        </div>
       </section>
 
       {/* Legal Services Section */}
       <section id="services" className="services">
-        <div className="container">
-          <div className="section-header">
+        <div className="section-header">
             <span className="section-badge">الخدمات القانونية</span>
             <h2 className="section-title">طبيعة العمل والخدمات المقدمة</h2>
             <p className="section-description">نقدم خدمات قانونية متكاملة بأساليب احترافية</p>
@@ -276,13 +269,11 @@ function App() {
               </p>
             </div>
           </div>
-        </div>
       </section>
 
       {/* About Section */}
       <section id="about" className="about">
-        <div className="container">
-          <div className="about-content">
+        <div className="about-content">
             <div className="about-text">
               <span className="section-badge">من نحن</span>
               <h2 className="section-title">شركة قانونية رائدة في المملكة</h2>
@@ -316,18 +307,16 @@ function App() {
             </div>
             <div className="about-visual">
               <div className="visual-card">
-                <img src="https://img.icons8.com/ios-filled/100/f4d03f/scales.png" alt="العدالة" className="visual-icon" />
+                <img src="/logo_without_bg.png" alt="العدالة" className="visual-icon" />
                 <h3>العدالة أولاً</h3>
               </div>
             </div>
           </div>
-        </div>
       </section>
 
       {/* Contact Section */}
       <section id="contact" className="contact">
-        <div className="container">
-          <div className="section-header">
+        <div className="section-header">
             <span className="section-badge">اتصل بنا</span>
             <h2 className="section-title">نحن هنا لمساعدتك</h2>
             <p className="section-description">تواصل معنا اليوم واحصل على استشارة قانونية مجانية</p>
@@ -349,17 +338,14 @@ function App() {
               <p>info@alhisonylaw.com</p>
             </div>
           </div>
-        </div>
       </section>
 
       {/* Footer */}
       <footer className="footer">
-        <div className="container">
-          <div className="footer-content">
+        <div className="footer-content">
             <h3 className="footer-title">شركة صالح الحيسوني للمحاماة</h3>
             <p className="footer-copyright">&copy; {new Date().getFullYear()} جميع الحقوق محفوظة</p>
           </div>
-        </div>
       </footer>
     </div>
   )
