@@ -23,31 +23,55 @@ function App() {
       const currentIsMobile = checkMobile()
       
       if (currentIsMobile) {
+        // Debounce to prevent rapid toggling
+        let lastActiveItem = null
+        let debounceTimeout = null
+        
         servicesObserver = new IntersectionObserver((entries) => {
+          // Clear any pending debounce
+          if (serviceDebounceTimeout) {
+            clearTimeout(serviceDebounceTimeout)
+          }
+          
+          // Find the item closest to center
+          let closestItem = null
+          let closestDistance = Infinity
+          
           entries.forEach(entry => {
-            const item = entry.target
-            const rect = entry.boundingClientRect
-            const viewportHeight = window.innerHeight
-            const cardCenter = rect.top + rect.height / 2
-            const viewportCenter = viewportHeight / 2
-            const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
-            const threshold = viewportHeight * 0.25 // 25% of viewport height from center
-            
-            // If card is centered in viewport (within threshold)
-            if (entry.isIntersecting && distanceFromCenter < threshold) {
+            if (entry.isIntersecting) {
+              const item = entry.target
+              const rect = entry.boundingClientRect
+              const viewportHeight = window.innerHeight
+              const cardCenter = rect.top + rect.height / 2
+              const viewportCenter = viewportHeight / 2
+              const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
+              const threshold = viewportHeight * 0.3 // 30% of viewport height from center
+              
+              // Track closest item to center
+              if (distanceFromCenter < threshold && distanceFromCenter < closestDistance) {
+                closestDistance = distanceFromCenter
+                closestItem = item
+              }
+            }
+          })
+          
+          // Debounce the activation
+          serviceDebounceTimeout = setTimeout(() => {
+            if (closestItem && closestItem !== lastActiveServiceItem) {
               // Close all other items
               serviceItems.forEach(i => {
-                if (i !== item) {
+                if (i !== closestItem) {
                   i.classList.remove('active')
                 }
               })
-              // Expand this card
-              item.classList.add('active')
+              // Expand the closest card
+              closestItem.classList.add('active')
+              lastActiveServiceItem = closestItem
             }
-          })
+          }, 100) // 100ms debounce for smoother experience
         }, {
-          threshold: [0, 0.25, 0.5, 0.75, 1],
-          rootMargin: '-15% 0px -15% 0px' // Focus on center 70% of viewport
+          threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+          rootMargin: '-20% 0px -20% 0px' // Focus on center 60% of viewport (same as specializations)
         })
         
         // Observe all service items
@@ -115,6 +139,10 @@ function App() {
     // Intersection Observer for auto-expand on mobile when card is centered
     let intersectionObserver = null
     
+    // Debounce variables for specializations (outside observer)
+    let lastActiveSpecItem = null
+    let specDebounceTimeout = null
+    
     const setupIntersectionObserver = () => {
       // Cleanup existing observer
       if (intersectionObserver) {
@@ -122,34 +150,61 @@ function App() {
         intersectionObserver = null
       }
       
+      // Reset debounce variables
+      lastActiveSpecItem = null
+      if (specDebounceTimeout) {
+        clearTimeout(specDebounceTimeout)
+        specDebounceTimeout = null
+      }
+      
       const currentIsMobile = checkMobile()
       
       if (currentIsMobile) {
         intersectionObserver = new IntersectionObserver((entries) => {
+          // Clear any pending debounce
+          if (specDebounceTimeout) {
+            clearTimeout(specDebounceTimeout)
+          }
+          
+          // Find the item closest to center
+          let closestItem = null
+          let closestDistance = Infinity
+          
           entries.forEach(entry => {
-            const item = entry.target
-            const rect = entry.boundingClientRect
-            const viewportHeight = window.innerHeight
-            const cardCenter = rect.top + rect.height / 2
-            const viewportCenter = viewportHeight / 2
-            const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
-            const threshold = viewportHeight * 0.25 // 25% of viewport height from center
-            
-            // If card is centered in viewport (within threshold)
-            if (entry.isIntersecting && distanceFromCenter < threshold) {
+            if (entry.isIntersecting) {
+              const item = entry.target
+              const rect = entry.boundingClientRect
+              const viewportHeight = window.innerHeight
+              const cardCenter = rect.top + rect.height / 2
+              const viewportCenter = viewportHeight / 2
+              const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
+              const threshold = viewportHeight * 0.3 // 30% of viewport height from center
+              
+              // Track closest item to center
+              if (distanceFromCenter < threshold && distanceFromCenter < closestDistance) {
+                closestDistance = distanceFromCenter
+                closestItem = item
+              }
+            }
+          })
+          
+          // Debounce the activation
+          specDebounceTimeout = setTimeout(() => {
+            if (closestItem && closestItem !== lastActiveSpecItem) {
               // Close all other items
               specItems.forEach(i => {
-                if (i !== item) {
+                if (i !== closestItem) {
                   i.classList.remove('active')
                 }
               })
-              // Expand this card
-              item.classList.add('active')
+              // Expand the closest card
+              closestItem.classList.add('active')
+              lastActiveSpecItem = closestItem
             }
-          })
+          }, 100) // 100ms debounce for smoother experience
         }, {
-          threshold: [0, 0.25, 0.5, 0.75, 1],
-          rootMargin: '-15% 0px -15% 0px' // Focus on center 70% of viewport
+          threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+          rootMargin: '-20% 0px -20% 0px' // Focus on center 60% of viewport
         })
         
         // Observe all spec items
