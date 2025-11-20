@@ -14,6 +14,200 @@
       content="محاماة, قانون, استشارات قانونية, قضايا مدنية, السعودية"
     />
     <title>شركة صالح الحيسوني للمحاماة - خدمات قانونية متميزة</title>
+    <!-- Early error handler to suppress external script errors -->
+    <script>
+      (function () {
+        "use strict";
+
+        // Store original console methods IMMEDIATELY
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        const originalLog = console.log;
+
+        // Helper to detect external script errors - comprehensive check
+        function isExternalError(str) {
+          if (!str) return false;
+          const s = String(str);
+          // Check for the specific problematic file
+          if (s.includes("5b6d41c8f3d086816edf7147d0e5be66.js")) return true;
+          // Check for function names from the error
+          if (s.includes("cleanUpStorage") || s.includes("quoteCheck"))
+            return true;
+          // Check for the specific error messages
+          if (
+            s.includes("Cannot read properties of null") &&
+            s.includes("length")
+          )
+            return true;
+          if (s.includes("indexOf is not a function")) return true;
+          // Check for extension URLs
+          if (
+            s.includes("extension://") ||
+            s.includes("moz-extension://") ||
+            s.includes("chrome-extension://")
+          )
+            return true;
+          // Check for minified external files (32-char hex filenames)
+          if (/[a-f0-9]{32}\.js/.test(s)) return true;
+          return false;
+        }
+
+        // Override console.error immediately - check all arguments
+        console.error = function () {
+          const args = Array.from(arguments);
+          let shouldSuppress = false;
+
+          // Check each argument
+          for (let i = 0; i < args.length; i++) {
+            const arg = args[i];
+            let errorStr = "";
+
+            if (arg instanceof Error) {
+              errorStr =
+                (arg.message || "") +
+                " " +
+                (arg.stack || "") +
+                " " +
+                (arg.name || "");
+            } else if (typeof arg === "object" && arg !== null) {
+              errorStr = JSON.stringify(arg);
+            } else {
+              errorStr = String(arg);
+            }
+
+            if (isExternalError(errorStr)) {
+              shouldSuppress = true;
+              break;
+            }
+          }
+
+          // Also check the combined string
+          if (!shouldSuppress) {
+            const combinedStr = args
+              .map((a) => {
+                if (a instanceof Error)
+                  return a.message + " " + (a.stack || "");
+                if (typeof a === "object") return JSON.stringify(a);
+                return String(a);
+              })
+              .join(" ");
+            shouldSuppress = isExternalError(combinedStr);
+          }
+
+          if (shouldSuppress) {
+            return; // Silently ignore external script errors
+          }
+          originalError.apply(console, arguments);
+        };
+
+        // Override console.warn for external errors too
+        console.warn = function () {
+          const args = Array.from(arguments);
+          const errorStr = args
+            .map((a) => {
+              if (a instanceof Error) return a.message + " " + (a.stack || "");
+              if (typeof a === "object") return JSON.stringify(a);
+              return String(a);
+            })
+            .join(" ");
+
+          if (isExternalError(errorStr)) {
+            return; // Silently ignore
+          }
+          originalWarn.apply(console, arguments);
+        };
+
+        // Also override console.log to catch any error-like messages
+        console.log = function () {
+          const args = Array.from(arguments);
+          const logStr = args.map((a) => String(a)).join(" ");
+
+          // Only suppress if it looks like an error message
+          if (
+            isExternalError(logStr) &&
+            (logStr.includes("TypeError") ||
+              logStr.includes("Error") ||
+              logStr.includes("at "))
+          ) {
+            return;
+          }
+          originalLog.apply(console, arguments);
+        };
+
+        // Global error handler - catch errors as early as possible
+        // Use capture phase and make it the first listener
+        const errorHandler = function (e) {
+          try {
+            const source = e.filename || e.source || e.target?.src || "";
+            const message = e.message || "";
+            const stack = (e.error && e.error.stack) || "";
+            const errorObj = e.error || {};
+            const errorMessage = errorObj.message || "";
+            const errorName = errorObj.name || "";
+
+            // Build comprehensive error string
+            const fullErrorStr = [
+              source,
+              message,
+              stack,
+              errorMessage,
+              errorName,
+              String(e.lineno || ""),
+              String(e.colno || ""),
+            ].join(" ");
+
+            // Check all possible error indicators
+            if (
+              isExternalError(fullErrorStr) ||
+              isExternalError(source) ||
+              isExternalError(message) ||
+              isExternalError(stack) ||
+              isExternalError(errorMessage)
+            ) {
+              e.preventDefault();
+              e.stopPropagation();
+              e.stopImmediatePropagation();
+              return false;
+            }
+          } catch (err) {
+            // If error handler itself errors, ignore it
+          }
+        };
+
+        // Add multiple listeners to catch errors at different phases
+        window.addEventListener("error", errorHandler, true);
+        document.addEventListener("error", errorHandler, true);
+
+        // Unhandled promise rejection handler
+        window.addEventListener(
+          "unhandledrejection",
+          function (e) {
+            try {
+              const reason = e.reason;
+              const message =
+                (reason && reason.message) || String(reason || "");
+              const stack = (reason && reason.stack) || "";
+              const reasonStr = String(reason || "");
+
+              // Check all possible error indicators
+              if (
+                isExternalError(message) ||
+                isExternalError(stack) ||
+                isExternalError(reasonStr)
+              ) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                return false;
+              }
+            } catch (err) {
+              // If error handler itself errors, ignore it
+            }
+          },
+          true
+        );
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

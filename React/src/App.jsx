@@ -3,92 +3,97 @@ import { useEffect } from 'react'
 
 function App() {
   useEffect(() => {
-    // Check if mobile device (shared for both sections)
-    const checkMobile = () => window.innerWidth <= 768 || 'ontouchstart' in window
-    let isMobile = checkMobile()
-    
-    // Services accordion functionality - click only (no auto-expand)
-    const serviceItems = document.querySelectorAll('.service-modern')
-    
-    // Click handler for services
-    serviceItems.forEach(item => {
-      const header = item.querySelector('.service-modern-header')
-      if (header) {
-        header.addEventListener('click', (e) => {
-          e.stopPropagation()
-          const isActive = item.classList.contains('active')
-          // Toggle active state
-          if (isActive) {
-            item.classList.remove('active')
-          } else {
-            // Close all other items
-            serviceItems.forEach(i => {
-              if (i !== item) {
-                i.classList.remove('active')
-              }
-            })
-            item.classList.add('active')
-          }
-        })
-      }
-    })
-    
-    // Close expanded services when clicking outside (desktop only)
-    const handleServicesOutsideClick = (e) => {
-      const currentIsMobile = checkMobile()
-      if (!currentIsMobile && !e.target.closest('.service-modern')) {
-        serviceItems.forEach(item => item.classList.remove('active'))
-      }
-    }
-    document.addEventListener('click', handleServicesOutsideClick)
-    
-    // Specializations functionality
-    const specItems = document.querySelectorAll('.spec-item')
-    
-    // Intersection Observer for auto-expand on mobile when card is centered
-    let intersectionObserver = null
-    
-    const setupIntersectionObserver = () => {
-      // Cleanup existing observer
-      if (intersectionObserver) {
-        intersectionObserver.disconnect()
-        intersectionObserver = null
+    try {
+      // Check if mobile device (shared for both sections)
+      const checkMobile = () => window.innerWidth <= 768 || 'ontouchstart' in window
+      
+      // Services accordion - click to expand/collapse (works on ALL screen sizes)
+      const handleServiceClick = (e) => {
+        const item = e.currentTarget
+        if (!item) return
+        if (e.target.closest('a') || e.target.closest('button')) return
+        
+        const isActive = item.classList.contains('active')
+        const allItems = document.querySelectorAll('.service-modern')
+        
+        if (isActive) {
+          item.classList.remove('active')
+        } else {
+          allItems.forEach(other => other.classList.remove('active'))
+          item.classList.add('active')
+        }
       }
       
-      const currentIsMobile = checkMobile()
+      // Wait for DOM
+      setTimeout(() => {
+        const serviceItems = document.querySelectorAll('.service-modern')
+        serviceItems.forEach(item => {
+          item.addEventListener('click', handleServiceClick)
+        })
+      }, 100)
+      
+      // Specializations functionality
+      const specItems = document.querySelectorAll('.spec-item')
+      
+      // Intersection Observer for auto-expand on mobile when card is centered
+      let intersectionObserver = null
+      
+      const setupIntersectionObserver = () => {
+        // Cleanup existing observer
+        if (intersectionObserver) {
+          intersectionObserver.disconnect()
+          intersectionObserver = null
+        }
+        
+        const currentIsMobile = checkMobile()
       
       if (currentIsMobile) {
         intersectionObserver = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            const item = entry.target
-            const rect = entry.boundingClientRect
-            const viewportHeight = window.innerHeight
-            const cardCenter = rect.top + rect.height / 2
-            const viewportCenter = viewportHeight / 2
-            const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
-            const threshold = viewportHeight * 0.25 // 25% of viewport height from center
-            
-            // If card is centered in viewport (within threshold)
-            if (entry.isIntersecting && distanceFromCenter < threshold) {
-              // Close all other items
-              specItems.forEach(i => {
-                if (i !== item) {
-                  i.classList.remove('active')
+          try {
+            if (!entries || !Array.isArray(entries)) return
+            entries.forEach(entry => {
+              try {
+                const item = entry?.target
+                if (!item) return
+                
+                const rect = entry.boundingClientRect
+                const viewportHeight = window.innerHeight
+                const cardCenter = rect.top + rect.height / 2
+                const viewportCenter = viewportHeight / 2
+                const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
+                const threshold = viewportHeight * 0.25 // 25% of viewport height from center
+                
+                // If card is centered in viewport (within threshold)
+                if (entry.isIntersecting && distanceFromCenter < threshold) {
+                  // Close all other items
+                  if (specItems && specItems.length > 0) {
+                    specItems.forEach(i => {
+                      if (i && i !== item) {
+                        i.classList.remove('active')
+                      }
+                    })
+                  }
+                  // Expand this card
+                  item.classList.add('active')
                 }
-              })
-              // Expand this card
-              item.classList.add('active')
-            }
-          })
+              } catch (err) {
+                console.warn('Error in IntersectionObserver entry:', err)
+              }
+            })
+          } catch (err) {
+            console.warn('Error in IntersectionObserver:', err)
+          }
         }, {
           threshold: [0, 0.25, 0.5, 0.75, 1],
           rootMargin: '-15% 0px -15% 0px' // Focus on center 70% of viewport
         })
         
         // Observe all spec items
-        specItems.forEach(item => {
-          intersectionObserver.observe(item)
-        })
+        if (specItems && specItems.length > 0) {
+          specItems.forEach(item => {
+            if (item) intersectionObserver.observe(item)
+          })
+        }
       }
     }
     
@@ -98,57 +103,85 @@ function App() {
     // Handle window resize
     let resizeTimeout
     const handleResize = () => {
-      clearTimeout(resizeTimeout)
-      resizeTimeout = setTimeout(() => {
-        setupIntersectionObserver()
-      }, 250)
+      try {
+        clearTimeout(resizeTimeout)
+        resizeTimeout = setTimeout(() => {
+          setupIntersectionObserver()
+        }, 250)
+      } catch (err) {
+        console.warn('Error in handleResize:', err)
+      }
     }
     window.addEventListener('resize', handleResize)
     
     // Click handler for desktop (and as fallback for mobile)
-    specItems.forEach(item => {
-      item.addEventListener('click', (e) => {
-        e.stopPropagation()
-        const isActive = item.classList.contains('active')
-        // Toggle active state
-        if (isActive) {
-          item.classList.remove('active')
-        } else {
-          // Close all other items
-          specItems.forEach(i => {
-            if (i !== item) {
-              i.classList.remove('active')
+    if (specItems && specItems.length > 0) {
+      specItems.forEach(item => {
+        if (item) {
+          item.addEventListener('click', (e) => {
+            try {
+              e.stopPropagation()
+              const isActive = item.classList.contains('active')
+              // Toggle active state
+              if (isActive) {
+                item.classList.remove('active')
+              } else {
+                // Close all other items
+                if (specItems && specItems.length > 0) {
+                  specItems.forEach(i => {
+                    if (i && i !== item) {
+                      i.classList.remove('active')
+                    }
+                  })
+                }
+                item.classList.add('active')
+                // On mobile, scroll to center the card
+                const currentIsMobile = checkMobile()
+                if (currentIsMobile) {
+                  setTimeout(() => {
+                    if (item) item.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                  }, 100)
+                }
+              }
+            } catch (err) {
+              console.warn('Error in spec item click handler:', err)
             }
           })
-          item.classList.add('active')
-          // On mobile, scroll to center the card
-          const currentIsMobile = checkMobile()
-          if (currentIsMobile) {
-            setTimeout(() => {
-              item.scrollIntoView({ behavior: 'smooth', block: 'center' })
-            }, 100)
-          }
         }
       })
-    })
+    }
 
     // Close expanded items when clicking outside (desktop only)
     const handleOutsideClick = (e) => {
-      const currentIsMobile = checkMobile()
-      if (!currentIsMobile && !e.target.closest('.spec-item')) {
-        specItems.forEach(item => item.classList.remove('active'))
+      try {
+        const currentIsMobile = checkMobile()
+        if (!currentIsMobile && e?.target && specItems && specItems.length > 0) {
+          if (!e.target.closest('.spec-item')) {
+            specItems.forEach(item => {
+              if (item) item.classList.remove('active')
+            })
+          }
+        }
+      } catch (err) {
+        console.warn('Error in handleOutsideClick:', err)
       }
     }
     document.addEventListener('click', handleOutsideClick)
     
     // Cleanup
     return () => {
-      if (intersectionObserver) {
-        intersectionObserver.disconnect()
+      try {
+        if (intersectionObserver) {
+          intersectionObserver.disconnect()
+        }
+        window.removeEventListener('resize', handleResize)
+        document.removeEventListener('click', handleOutsideClick)
+      } catch (err) {
+        console.warn('Error in cleanup:', err)
       }
-      window.removeEventListener('resize', handleResize)
-      document.removeEventListener('click', handleOutsideClick)
-      document.removeEventListener('click', handleServicesOutsideClick)
+    }
+    } catch (err) {
+      console.error('Error in App useEffect:', err)
     }
   }, [])
 
@@ -420,6 +453,12 @@ function App() {
                   <div className="service-modern-item">التمثيل أمام اللجان شبه القضائية (لجان المصرفية، التأمين، الأوراق المالية، الضرائب)</div>
                   <div className="service-modern-item">حضور جلسات التحقيق أمام النيابة العامة ومراكز الشرطة</div>
                   <div className="service-modern-item">إعداد اللوائح الاعتراضية، مذكرات الجواب، والتماس إعادة النظر</div>
+                  <a href="https://wa.me/966558508881?text=السلام%20عليكم،%20أرغب%20في%20الاستفسار%20عن%20خدمة%20الترافع%20والتمثيل%20القضائي" target="_blank" rel="noopener noreferrer" className="service-whatsapp-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    اسألنا عن هذا
+                  </a>
                 </div>
               </div>
             </div>
@@ -437,6 +476,12 @@ function App() {
                   <div className="service-modern-item">دراسات الجدوى القانونية للمشاريع الجديدة</div>
                   <div className="service-modern-item">خدمة "المستشار القانوني الخارجي" للشركات (عقود سنوية)</div>
                   <div className="service-modern-item"><strong>الحوكمة والامتثال:</strong> ضمان التزام الشركات بالأنظمة السعودية الجديدة ولوائح حوكمة الشركات</div>
+                  <a href="https://wa.me/966558508881?text=السلام%20عليكم،%20أرغب%20في%20الاستفسار%20عن%20خدمة%20الاستشارات%20والدراسات%20القانونية" target="_blank" rel="noopener noreferrer" className="service-whatsapp-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    اسألنا عن هذا
+                  </a>
                 </div>
               </div>
             </div>
@@ -454,6 +499,12 @@ function App() {
                   <div className="service-modern-item">صياغة عقود العمل واللوائح الداخلية للمنشآت</div>
                   <div className="service-modern-item">مراجعة العقود وتدقيقها لضمان حماية حقوق الموكل وتقليل المخاطر</div>
                   <div className="service-modern-item">إدارة العقود ومتابعة تجديدها وتنفيذ بنودها</div>
+                  <a href="https://wa.me/966558508881?text=السلام%20عليكم،%20أرغب%20في%20الاستفسار%20عن%20خدمة%20العقود%20والاتفاقيات" target="_blank" rel="noopener noreferrer" className="service-whatsapp-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    اسألنا عن هذا
+                  </a>
                 </div>
               </div>
             </div>
@@ -470,6 +521,12 @@ function App() {
                   <div className="service-modern-item">الوساطة العقارية والتجارية للوصول لحلول ودية</div>
                   <div className="service-modern-item">التمثيل في قضايا التحكيم التجاري المحلي والدولي</div>
                   <div className="service-modern-item">صياغة مشارط التحكيم في العقود</div>
+                  <a href="https://wa.me/966558508881?text=السلام%20عليكم،%20أرغب%20في%20الاستفسار%20عن%20خدمة%20التحكيم%20وتسوية%20المنازعات" target="_blank" rel="noopener noreferrer" className="service-whatsapp-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    اسألنا عن هذا
+                  </a>
                 </div>
               </div>
             </div>
@@ -487,6 +544,12 @@ function App() {
                   <div className="service-modern-item"><strong>الاستثمار الأجنبي:</strong> استخراج تراخيص وزارة الاستثمار (MISA) وتأسيس شركات المستثمر الأجنبي</div>
                   <div className="service-modern-item"><strong>الاندماج والاستحواذ:</strong> الفحص النافي للجهالة (Due Diligence)، وعقود الاستحواذ</div>
                   <div className="service-modern-item"><strong>تسجيل العلامات التجارية:</strong> والنماذج الصناعية لدى الهيئة السعودية للملكية الفكرية</div>
+                  <a href="https://wa.me/966558508881?text=السلام%20عليكم،%20أرغب%20في%20الاستفسار%20عن%20خدمة%20تأسيس%20ودعم%20الشركات" target="_blank" rel="noopener noreferrer" className="service-whatsapp-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    اسألنا عن هذا
+                  </a>
                 </div>
               </div>
             </div>
@@ -522,6 +585,12 @@ function App() {
                   <div className="service-modern-item">تنفيذ الأوراق التجارية (الشيكات، السندات لأمر، الكمبيالات) عبر محكمة التنفيذ</div>
                   <div className="service-modern-item">متابعة إجراءات الحجز على الأموال والمنع من السفر والإفصاح عن الأصول</div>
                   <div className="service-modern-item">تحصيل الديون المتعثرة للشركات والأفراد (تسوية أو قضاءً)</div>
+                  <a href="https://wa.me/966558508881?text=السلام%20عليكم،%20أرغب%20في%20الاستفسار%20عن%20خدمة%20التنفيذ%20والتحصيل" target="_blank" rel="noopener noreferrer" className="service-whatsapp-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    اسألنا عن هذا
+                  </a>
                 </div>
               </div>
             </div>
