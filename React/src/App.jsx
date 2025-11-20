@@ -99,11 +99,11 @@ function App() {
                 const cardCenter = rect.top + rect.height / 2
                 const viewportCenter = viewportHeight / 2
                 const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
-                const threshold = viewportHeight * 0.25 // 25% of viewport height from center
+                const threshold = viewportHeight * 0.3 // 30% of viewport height from center
                 
-                // If card is centered in viewport (within threshold)
+                // If card is centered in viewport (within threshold) and intersecting
                 if (entry.isIntersecting && distanceFromCenter < threshold) {
-                  // Close all other items
+                  // Close all other items first
                   if (specItems && specItems.length > 0) {
                     specItems.forEach(i => {
                       if (i && i !== item) {
@@ -111,9 +111,11 @@ function App() {
                       }
                     })
                   }
-                  // Expand this card
+                  // Expand this card - keep it expanded even when scrolling
                   item.classList.add('active')
                 }
+                // Don't remove active class when card leaves viewport - let it stay expanded
+                // Cards will only collapse when another card becomes active or user clicks
               } catch (err) {
                 console.warn('Error in IntersectionObserver entry:', err)
               }
@@ -122,8 +124,8 @@ function App() {
             console.warn('Error in IntersectionObserver:', err)
           }
         }, {
-          threshold: [0, 0.25, 0.5, 0.75, 1],
-          rootMargin: '-15% 0px -15% 0px' // Focus on center 70% of viewport
+          threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+          rootMargin: '-10% 0px -10% 0px' // Focus on center 80% of viewport for better detection
         })
         
         // Observe all spec items

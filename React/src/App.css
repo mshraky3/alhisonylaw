@@ -758,19 +758,15 @@ body {
 .spec-details {
   max-height: 0;
   overflow: hidden;
-  opacity: 0;
-  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s, 
-              opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.3s,
-              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.3s,
+  opacity: 1;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s,
               margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
-  transform: translateY(-10px);
   margin-top: 0;
 }
 
 .spec-item.active .spec-details {
   max-height: 2000px;
   opacity: 1;
-  transform: translateY(0);
   margin-top: 1rem;
 }
 
@@ -779,7 +775,6 @@ body {
   .spec-item:hover .spec-details {
     max-height: 2000px;
     opacity: 1;
-    transform: translateY(0);
     margin-top: 1rem;
   }
 }
@@ -834,10 +829,20 @@ body {
   
   /* Ensure smooth transitions on mobile */
   .spec-details {
-    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s, 
-                opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s,
-                transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s,
+    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s,
                 margin-top 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+    will-change: max-height;
+  }
+  
+  /* Prevent cards from disappearing when scrolling - ensure they stay visible */
+  .spec-item {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  .spec-item.active {
+    visibility: visible !important;
+    opacity: 1 !important;
   }
   
   /* Reduce animation distance on mobile for better UX */
@@ -1642,6 +1647,15 @@ body {
   .spec-item.active {
     transform: translateY(-4px) scale(1.005);
     box-shadow: 0 10px 30px rgba(26, 77, 58, 0.15);
+    z-index: 10;
+  }
+  
+  /* Ensure active cards stay visible and expanded on mobile */
+  .spec-item.active .spec-details {
+    max-height: 2000px !important;
+    opacity: 1 !important;
+    margin-top: 1rem !important;
+    display: block !important;
   }
 
   .spec-visual {
