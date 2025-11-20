@@ -28,7 +28,7 @@ html {
 }
 
 body {
-  font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+  font-family: 'Tajawal', 'Segoe UI', Tahoma, sans-serif;
   color: var(--text-dark);
   line-height: 1.7;
   overflow-x: hidden;
@@ -56,6 +56,18 @@ body {
   top: 0;
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  animation: fadeInDown 0.6s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .header-content {
@@ -153,6 +165,18 @@ body {
   z-index: 1;
   max-width: 900px;
   margin: 0 auto;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hero-badge {
@@ -166,6 +190,16 @@ body {
   margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .hero-title {
@@ -202,8 +236,11 @@ body {
   justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 3rem;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
 }
-
+.hero-buttons a { 
+  text-decoration: none !important;
+}
 .cta-button {
   padding: 1rem 2.5rem;
   font-size: 1rem;
@@ -216,26 +253,77 @@ body {
 }
 
 .cta-button.primary {
-  background: var(--gold);
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
   color: var(--green-dark);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
 .cta-button.primary:hover {
-  background: var(--gold-light);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
 }
 
-.cta-button.secondary {
-  background: transparent;
-  color: var(--green-dark);
-  border: 2px solid var(--green-dark);
+.hero-cta {
+  padding: 1.25rem 3rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  min-width: 300px;
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+  position: relative;
+  overflow: hidden;
 }
 
-.cta-button.secondary:hover {
-  background: var(--green-dark);
-  color: var(--white);
+.hero-cta > * {
+  position: relative;
+  z-index: 2;
 }
+
+.hero-cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  animation: shine 3s infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.hero-cta:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.6);
+}
+
+.hero-cta:hover::before {
+  animation: shine 1.5s infinite;
+}
+
+.hero-cta svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
 
 .hero-stats {
   display: flex;
@@ -259,6 +347,16 @@ body {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border: 2px solid transparent;
   flex: 1;
+  animation: fadeInUp 0.6s ease-out;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.stat-item:nth-child(1) { animation-delay: 0.1s; }
+.stat-item:nth-child(2) { animation-delay: 0.2s; }
+.stat-item:nth-child(3) { animation-delay: 0.3s; }
+
+.stat-item {
   min-width: 160px;
   max-width: 220px;
   display: flex;
@@ -373,7 +471,6 @@ body {
 /* ============================================
    Sections - Seamless Flow
    ============================================ */
-.services,
 .about,
 .contact {
   padding: 5rem 2rem;
@@ -381,7 +478,9 @@ body {
   margin: 0 auto;
   width: 100%;
   overflow-x: hidden;
+  animation: fadeInUp 0.8s ease-out;
 }
+
 
 .section-header {
   text-align: center;
@@ -415,76 +514,6 @@ body {
   margin: 0 auto;
 }
 
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
-}
-
-.service-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 2.5rem;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s;
-  border-top: 3px solid var(--gold);
-}
-
-.service-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-}
-
-.service-icon-wrapper {
-  width: 70px;
-  height: 70px;
-  margin: 0 auto 1.5rem;
-  background: rgba(212, 175, 55, 0.1);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s;
-}
-
-.service-card:hover .service-icon-wrapper {
-  background: var(--gold);
-  transform: scale(1.1);
-}
-
-.service-icon {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-  filter: brightness(0) saturate(100%) invert(27%) sepia(15%) saturate(2000%) hue-rotate(120deg) brightness(0.9);
-  transition: all 0.3s;
-}
-
-.service-card:hover .service-icon {
-  filter: brightness(0) saturate(100%) invert(75%) sepia(95%) saturate(2000%) hue-rotate(5deg);
-}
-
-.service-card h3 {
-  font-size: 1.5rem;
-  color: var(--green-dark);
-  margin-bottom: 1rem;
-  font-weight: 700;
-  text-align: center;
-}
-
-.service-card p {
-  color: var(--text-light);
-  line-height: 1.8;
-  text-align: right;
-  font-size: 0.95rem;
-}
-
-.service-card p strong {
-  color: var(--green-dark);
-  font-weight: 600;
-}
 
 /* ============================================
    Modern Specializations Section - Artistic Design
@@ -550,6 +579,51 @@ body {
   display: flex;
   flex-direction: column;
   z-index: 1;
+  opacity: 0;
+  animation: slideInFromRight 0.6s ease-out forwards;
+}
+
+/* Alternate animation directions - odd items from right, even items from left */
+.spec-item:nth-child(odd) {
+  animation: slideInFromRight 0.6s ease-out forwards;
+}
+
+.spec-item:nth-child(even) {
+  animation: slideInFromLeft 0.6s ease-out forwards;
+}
+
+/* Stagger the animation delays */
+.spec-item:nth-child(1) { animation-delay: 0.1s; }
+.spec-item:nth-child(2) { animation-delay: 0.15s; }
+.spec-item:nth-child(3) { animation-delay: 0.2s; }
+.spec-item:nth-child(4) { animation-delay: 0.25s; }
+.spec-item:nth-child(5) { animation-delay: 0.3s; }
+.spec-item:nth-child(6) { animation-delay: 0.35s; }
+.spec-item:nth-child(7) { animation-delay: 0.4s; }
+.spec-item:nth-child(8) { animation-delay: 0.45s; }
+.spec-item:nth-child(9) { animation-delay: 0.5s; }
+.spec-item:nth-child(10) { animation-delay: 0.55s; }
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .spec-item::before {
@@ -600,8 +674,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(26, 77, 58, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.09) 0%, rgba(26, 77, 58, 0.1) 100%);
   overflow: hidden;
+  
 }
 
 .spec-icon-bg {
@@ -641,7 +716,7 @@ body {
   left: 1rem;
   font-size: 3rem;
   font-weight: 900;
-  color: rgba(26, 77, 58, 0.08);
+  color: var(--gold);
   line-height: 1;
   transition: all 0.4s;
   z-index: 1;
@@ -684,10 +759,10 @@ body {
   max-height: 0;
   overflow: hidden;
   opacity: 0;
-  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
-              opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
-              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
-              margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s, 
+              opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.3s,
+              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.3s,
+              margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
   transform: translateY(-10px);
   margin-top: 0;
 }
@@ -759,10 +834,33 @@ body {
   
   /* Ensure smooth transitions on mobile */
   .spec-details {
-    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
-                opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
-                transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
-                margin-top 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s, 
+                opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s,
+                transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s,
+                margin-top 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+  }
+  
+  /* Reduce animation distance on mobile for better UX */
+  @keyframes slideInFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInFromLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 }
 
@@ -796,6 +894,7 @@ body {
   width: 100%;
   overflow-x: hidden;
   overflow-y: visible;
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .services-showcase {
@@ -813,7 +912,19 @@ body {
   border: 1px solid rgba(212, 175, 55, 0.15);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  animation: fadeIn 0.6s ease-out;
+  opacity: 0;
+  animation-fill-mode: forwards;
 }
+
+.service-modern:nth-child(1) { animation-delay: 0.1s; }
+.service-modern:nth-child(2) { animation-delay: 0.2s; }
+.service-modern:nth-child(3) { animation-delay: 0.3s; }
+.service-modern:nth-child(4) { animation-delay: 0.4s; }
+.service-modern:nth-child(5) { animation-delay: 0.5s; }
+.service-modern:nth-child(6) { animation-delay: 0.6s; }
+.service-modern:nth-child(7) { animation-delay: 0.7s; }
+.service-modern:nth-child(8) { animation-delay: 0.8s; }
 
 .service-modern::before {
   content: '';
@@ -1047,6 +1158,7 @@ body {
   grid-template-columns: 1.2fr 0.8fr;
   gap: 4rem;
   align-items: center;
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .about-text {
@@ -1105,6 +1217,7 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   text-align: center;
   transition: all 0.3s;
+  animation: fadeIn 0.8s ease-out 0.3s both;
 }
 
 .visual-card:hover {
@@ -1151,7 +1264,12 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   transition: all 0.3s;
   border-top: 4px solid var(--gold);
+  animation: fadeInUp 0.6s ease-out;
 }
+
+.contact-card:nth-child(1) { animation-delay: 0.1s; }
+.contact-card:nth-child(2) { animation-delay: 0.2s; }
+.contact-card:nth-child(3) { animation-delay: 0.3s; }
 
 .contact-card:hover {
   transform: translateY(-6px);
@@ -1255,6 +1373,7 @@ body {
   background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-medium) 100%);
   color: var(--white);
   padding: 1.5rem 2rem;
+  animation: fadeIn 0.8s ease-out;
 }
 
 .footer-content {
@@ -1292,6 +1411,47 @@ body {
   opacity: 0.8;
   font-size: 0.9rem;
   margin: 0;
+}
+
+/* ============================================
+   Notification Toast
+   ============================================ */
+.notification-toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-medium) 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(26, 77, 58, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 10000;
+  animation: slideInUp 0.3s ease-out;
+  border: 2px solid var(--gold);
+}
+
+.notification-toast svg {
+  flex-shrink: 0;
+  color: var(--gold-light);
+}
+
+.notification-toast span {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* ============================================
@@ -1374,6 +1534,13 @@ body {
     gap: 0.75rem;
   }
 
+  .hero-cta {
+    width: 100%;
+    min-width: auto;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+  }
+
   .cta-button {
     width: 100%;
     padding: 0.875rem 2rem;
@@ -1438,7 +1605,6 @@ body {
   }
 
   /* All Sections Padding Mobile */
-  .services,
   .about,
   .contact,
   .specializations-modern,
