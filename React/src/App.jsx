@@ -71,9 +71,8 @@ function App() {
       }, 100)
       
       // Specializations functionality
+      // MOBILE: Auto-expand on scroll | DESKTOP: Expand on hover only
       const specItems = document.querySelectorAll('.spec-item')
-      
-      // Intersection Observer for auto-expand on mobile when card is centered
       let intersectionObserver = null
       
       const setupIntersectionObserver = () => {
@@ -85,128 +84,64 @@ function App() {
         
         const currentIsMobile = checkMobile()
       
-      if (currentIsMobile) {
-        intersectionObserver = new IntersectionObserver((entries) => {
-          try {
-            if (!entries || !Array.isArray(entries)) return
-            entries.forEach(entry => {
-              try {
-                const item = entry?.target
-                if (!item) return
-                
-                const rect = entry.boundingClientRect
-                const viewportHeight = window.innerHeight
-                const cardCenter = rect.top + rect.height / 2
-                const viewportCenter = viewportHeight / 2
-                const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
-                const threshold = viewportHeight * 0.3 // 30% of viewport height from center
-                
-                // If card is centered in viewport (within threshold) and intersecting
-                if (entry.isIntersecting && distanceFromCenter < threshold) {
-                  // Close all other items first
-                  if (specItems && specItems.length > 0) {
+        // Only set up IntersectionObserver on mobile devices
+        if (currentIsMobile && specItems && specItems.length > 0) {
+          intersectionObserver = new IntersectionObserver((entries) => {
+            try {
+              entries.forEach(entry => {
+                try {
+                  const item = entry?.target
+                  if (!item) return
+                  
+                  const rect = entry.boundingClientRect
+                  const viewportHeight = window.innerHeight
+                  const cardCenter = rect.top + rect.height / 2
+                  const viewportCenter = viewportHeight / 2
+                  const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
+                  const threshold = viewportHeight * 0.25
+                  
+                  // Auto-expand card when centered in viewport
+                  if (entry.isIntersecting && distanceFromCenter < threshold) {
+                    // Close all other items
                     specItems.forEach(i => {
                       if (i && i !== item) {
                         i.classList.remove('active')
                       }
                     })
+                    // Expand this card
+                    item.classList.add('active')
                   }
-                  // Expand this card - keep it expanded even when scrolling
-                  item.classList.add('active')
+                } catch (err) {
+                  console.warn('Error in IntersectionObserver entry:', err)
                 }
-                // Don't remove active class when card leaves viewport - let it stay expanded
-                // Cards will only collapse when another card becomes active or user clicks
-              } catch (err) {
-                console.warn('Error in IntersectionObserver entry:', err)
-              }
-            })
-          } catch (err) {
-            console.warn('Error in IntersectionObserver:', err)
-          }
-        }, {
-          threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
-          rootMargin: '-10% 0px -10% 0px' // Focus on center 80% of viewport for better detection
-        })
-        
-        // Observe all spec items
-        if (specItems && specItems.length > 0) {
+              })
+            } catch (err) {
+              console.warn('Error in IntersectionObserver:', err)
+            }
+          }, {
+            threshold: [0, 0.25, 0.5, 0.75, 1],
+            rootMargin: '-15% 0px -15% 0px'
+          })
+          
+          // Observe all spec items on mobile
           specItems.forEach(item => {
             if (item) intersectionObserver.observe(item)
           })
         }
       }
-    }
     
-    // Initial setup
-    setupIntersectionObserver()
-    
-    // Handle window resize
-    let resizeTimeout
-    const handleResize = () => {
-      try {
+      // Initial setup
+      setupIntersectionObserver()
+      
+      // Handle window resize
+      let resizeTimeout
+      const handleResize = () => {
         clearTimeout(resizeTimeout)
         resizeTimeout = setTimeout(() => {
           setupIntersectionObserver()
         }, 250)
-      } catch (err) {
-        console.warn('Error in handleResize:', err)
       }
-    }
-    window.addEventListener('resize', handleResize)
-    
-    // Click handler for desktop (and as fallback for mobile)
-    if (specItems && specItems.length > 0) {
-      specItems.forEach(item => {
-        if (item) {
-          item.addEventListener('click', (e) => {
-            try {
-              e.stopPropagation()
-              const isActive = item.classList.contains('active')
-              // Toggle active state
-              if (isActive) {
-                item.classList.remove('active')
-              } else {
-                // Close all other items
-                if (specItems && specItems.length > 0) {
-                  specItems.forEach(i => {
-                    if (i && i !== item) {
-                      i.classList.remove('active')
-                    }
-                  })
-                }
-                item.classList.add('active')
-                // On mobile, scroll to center the card
-                const currentIsMobile = checkMobile()
-                if (currentIsMobile) {
-                  setTimeout(() => {
-                    if (item) item.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                  }, 100)
-                }
-              }
-            } catch (err) {
-              console.warn('Error in spec item click handler:', err)
-            }
-          })
-        }
-      })
-    }
-
-    // Close expanded items when clicking outside (desktop only)
-    const handleOutsideClick = (e) => {
-      try {
-        const currentIsMobile = checkMobile()
-        if (!currentIsMobile && e?.target && specItems && specItems.length > 0) {
-          if (!e.target.closest('.spec-item')) {
-            specItems.forEach(item => {
-              if (item) item.classList.remove('active')
-            })
-          }
-        }
-      } catch (err) {
-        console.warn('Error in handleOutsideClick:', err)
-      }
-    }
-    document.addEventListener('click', handleOutsideClick)
+      window.addEventListener('resize', handleResize)
     
     // Cleanup
     return () => {
@@ -215,7 +150,6 @@ function App() {
           intersectionObserver.disconnect()
         }
         window.removeEventListener('resize', handleResize)
-        document.removeEventListener('click', handleOutsideClick)
       } catch (err) {
         console.warn('Error in cleanup:', err)
       }

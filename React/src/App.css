@@ -572,61 +572,16 @@ body {
   backdrop-filter: blur(20px);
   border-radius: 24px;
   overflow: visible;
-  /* Only transition specific properties to avoid conflicts with spec-details animation */
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(212, 175, 55, 0.2);
   cursor: pointer;
   min-height: 280px;
   display: flex;
   flex-direction: column;
   z-index: 1;
-  opacity: 0;
-  animation: slideInFromRight 0.6s ease-out forwards;
-}
-
-/* Alternate animation directions - odd items from right, even items from left */
-.spec-item:nth-child(odd) {
-  animation: slideInFromRight 0.6s ease-out forwards;
-}
-
-.spec-item:nth-child(even) {
-  animation: slideInFromLeft 0.6s ease-out forwards;
-}
-
-/* Stagger the animation delays */
-.spec-item:nth-child(1) { animation-delay: 0.1s; }
-.spec-item:nth-child(2) { animation-delay: 0.15s; }
-.spec-item:nth-child(3) { animation-delay: 0.2s; }
-.spec-item:nth-child(4) { animation-delay: 0.25s; }
-.spec-item:nth-child(5) { animation-delay: 0.3s; }
-.spec-item:nth-child(6) { animation-delay: 0.35s; }
-.spec-item:nth-child(7) { animation-delay: 0.4s; }
-.spec-item:nth-child(8) { animation-delay: 0.45s; }
-.spec-item:nth-child(9) { animation-delay: 0.5s; }
-.spec-item:nth-child(10) { animation-delay: 0.55s; }
-
-@keyframes slideInFromRight {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInFromLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  opacity: 1;
+  visibility: visible;
 }
 
 .spec-item::before {
@@ -647,14 +602,12 @@ body {
 }
 
 .spec-item:hover {
-  transform: translateY(-12px) scale(1.02);
   box-shadow: 0 20px 60px rgba(26, 77, 58, 0.2), 0 0 0 1px rgba(212, 175, 55, 0.3);
   border-color: rgba(212, 175, 55, 0.4);
   z-index: 10;
 }
 
 .spec-item.active {
-  transform: translateY(-12px) scale(1.02);
   box-shadow: 0 20px 60px rgba(26, 77, 58, 0.2), 0 0 0 1px rgba(212, 175, 55, 0.3);
   border-color: rgba(212, 175, 55, 0.4);
   z-index: 10;
@@ -761,56 +714,73 @@ body {
 .spec-details {
   max-height: 0;
   overflow: hidden;
-  opacity: 1;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s, 
+              margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
   margin-top: 0;
-  /* No delays on collapse - smooth immediate collapse */
-  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-              margin-top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.spec-item.active .spec-details {
-  max-height: 2000px;
-  opacity: 1;
-  margin-top: 1rem;
-  /* Small delay only on expand for smoother feel */
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.05s,
-              margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.05s;
-}
-
-/* Only show details on hover for desktop, but keep click for mobile */
+/* Desktop/Tablet: Expand on hover only */
 @media (hover: hover) and (pointer: fine) {
   .spec-item:hover .spec-details {
     max-height: 2000px;
-    opacity: 1;
     margin-top: 1rem;
   }
 }
 
-/* Mobile-specific: Add visual indicator and smooth behavior */
+/* Mobile: Expand when active (set by IntersectionObserver) */
+.spec-item.active .spec-details {
+  max-height: 2000px;
+  margin-top: 1rem;
+}
+
+/* Mobile-specific: No hover effects, only auto-expand on scroll */
 @media (max-width: 768px) {
   .spec-item {
     position: relative;
     scroll-margin-top: 1rem;
     scroll-margin-bottom: 1rem;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
   
-  /* Subtle pulse animation for cards entering viewport */
-  @keyframes subtlePulse {
-    0%, 100% {
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    }
-    50% {
-      box-shadow: 0 6px 25px rgba(212, 175, 55, 0.15);
-    }
+  /* Disable hover effects on mobile */
+  .spec-item:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-color: rgba(212, 175, 55, 0.2);
+    z-index: 1;
   }
   
+  .spec-item:hover::before {
+    transform: scaleX(0);
+  }
+  
+  .spec-item:hover .spec-icon-bg {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  
+  .spec-item:hover .spec-icon {
+    transform: scale(1) rotate(0deg);
+    filter: brightness(0) saturate(100%) invert(27%) sepia(15%) saturate(2000%) hue-rotate(120deg) brightness(0.9);
+  }
+  
+  .spec-item:hover .spec-number {
+    color: var(--gold);
+    transform: scale(1);
+  }
+  
+  .spec-item:hover .spec-content h3 {
+    color: var(--green-dark);
+  }
+  
+  /* Active card styling on mobile */
   .spec-item.active {
-    animation: subtlePulse 2s ease-in-out;
     scroll-margin-top: 2rem;
     scroll-margin-bottom: 2rem;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
   
-  /* Activate all hover effects when active on mobile */
   .spec-item.active::before {
     transform: scaleX(1);
   }
@@ -834,51 +804,10 @@ body {
     color: var(--gold);
   }
   
-  /* Ensure smooth transitions on mobile - no delays on collapse */
+  /* Smooth transitions on mobile */
   .spec-details {
-    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                margin-top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: max-height;
-  }
-  
-  .spec-item.active .spec-details {
-    /* Small delay only on expand */
-    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.05s,
-                margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.05s;
-  }
-  
-  /* Prevent cards from disappearing when scrolling - ensure they stay visible */
-  .spec-item {
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-  
-  .spec-item.active {
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-  
-  /* Reduce animation distance on mobile for better UX */
-  @keyframes slideInFromRight {
-    from {
-      opacity: 0;
-      transform: translateX(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes slideInFromLeft {
-    from {
-      opacity: 0;
-      transform: translateX(-30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s, 
+                margin-top 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
   }
 }
 
@@ -1658,17 +1587,7 @@ body {
 
   .spec-item:hover,
   .spec-item.active {
-    transform: translateY(-4px) scale(1.005);
     box-shadow: 0 10px 30px rgba(26, 77, 58, 0.15);
-    z-index: 10;
-  }
-  
-  /* Ensure active cards stay visible and expanded on mobile */
-  .spec-item.active .spec-details {
-    max-height: 2000px !important;
-    opacity: 1 !important;
-    margin-top: 1rem !important;
-    display: block !important;
   }
 
   .spec-visual {
