@@ -247,7 +247,6 @@ body {
   font-weight: 700;
   border-radius: 30px;
   border: none;
-  cursor: pointer;
   transition: all 0.3s;
   font-family: inherit;
 }
@@ -575,7 +574,6 @@ body {
   transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
               border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(212, 175, 55, 0.2);
-  cursor: pointer;
   min-height: 280px;
   display: flex;
   flex-direction: column;
@@ -719,9 +717,14 @@ body {
   margin-top: 0;
 }
 
-/* Desktop/Tablet: Expand on hover only */
+/* Desktop/Tablet: Expand only when active (set by JavaScript on hover) */
 @media (hover: hover) and (pointer: fine) {
   .spec-item:hover .spec-details {
+    max-height: 0;
+    margin-top: 0;
+  }
+  
+  .spec-item.active .spec-details {
     max-height: 2000px;
     margin-top: 1rem;
   }
@@ -841,7 +844,6 @@ body {
   width: 100%;
   overflow-x: hidden;
   overflow-y: visible;
-  animation: fadeInUp 0.8s ease-out;
 }
 
 .services-showcase {
@@ -859,19 +861,8 @@ body {
   border: 1px solid rgba(212, 175, 55, 0.15);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  animation: fadeIn 0.6s ease-out;
-  opacity: 0;
-  animation-fill-mode: forwards;
+  opacity: 1;
 }
-
-.service-modern:nth-child(1) { animation-delay: 0.1s; }
-.service-modern:nth-child(2) { animation-delay: 0.2s; }
-.service-modern:nth-child(3) { animation-delay: 0.3s; }
-.service-modern:nth-child(4) { animation-delay: 0.4s; }
-.service-modern:nth-child(5) { animation-delay: 0.5s; }
-.service-modern:nth-child(6) { animation-delay: 0.6s; }
-.service-modern:nth-child(7) { animation-delay: 0.7s; }
-.service-modern:nth-child(8) { animation-delay: 0.8s; }
 
 .service-modern::before {
   content: '';
@@ -943,7 +934,6 @@ body {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  cursor: pointer;
   position: relative;
   z-index: 2;
 }
@@ -1028,14 +1018,11 @@ body {
 .service-modern-body {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
-              opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
-  opacity: 0;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .service-modern.active .service-modern-body {
   max-height: 2000px;
-  opacity: 1;
 }
 
 .service-modern-content {
@@ -1082,7 +1069,6 @@ body {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
   border: none;
-  cursor: pointer;
 }
 
 .service-whatsapp-button:hover {

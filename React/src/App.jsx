@@ -42,32 +42,49 @@ function App() {
       const handleServiceClick = (e) => {
         const item = e.currentTarget
         if (!item) return
-        // Don't toggle if clicking on links or buttons
-        if (e.target.closest('a') || e.target.closest('button')) return
+        
+        // Only prevent toggle if clicking directly on the WhatsApp button link
+        // Check if the clicked element is inside the service-modern-body and is a link
+        const clickedElement = e.target
+        const body = item.querySelector('.service-modern-body')
+        const isWhatsAppLink = clickedElement.closest('a.service-whatsapp-button')
+        
+        // If clicking on WhatsApp link inside the body, let it work normally
+        if (isWhatsAppLink && body && body.contains(clickedElement)) {
+          return
+        }
+        
+        // Prevent event bubbling
+        e.stopPropagation()
         
         const isActive = item.classList.contains('active')
         const allItems = document.querySelectorAll('.service-modern')
         
         if (isActive) {
+          // Collapse this item
           item.classList.remove('active')
         } else {
           // Close all other items first
           allItems.forEach(other => {
-            if (other !== item) {
+            if (other && other !== item) {
               other.classList.remove('active')
             }
           })
-          // Then open the clicked item
+          // Then expand the clicked item
           item.classList.add('active')
         }
       }
       
-      // Wait for DOM
+      // Wait for DOM to be ready
       setTimeout(() => {
         const serviceItems = document.querySelectorAll('.service-modern')
-        serviceItems.forEach(item => {
-          item.addEventListener('click', handleServiceClick)
-        })
+        if (serviceItems && serviceItems.length > 0) {
+          serviceItems.forEach(item => {
+            if (item) {
+              item.addEventListener('click', handleServiceClick)
+            }
+          })
+        }
       }, 100)
       
       // Specializations functionality
@@ -130,6 +147,47 @@ function App() {
         }
       }
     
+      // Desktop/Tablet: Ensure only one card expands on hover
+      const ensureSingleActiveCard = () => {
+        const currentIsMobile = checkMobile()
+        if (!currentIsMobile && specItems && specItems.length > 0) {
+          // Remove active class from all cards first
+          specItems.forEach(item => {
+            if (item) item.classList.remove('active')
+          })
+        }
+      }
+      
+      // Handle hover on desktop/tablet to ensure only one card expands
+      if (specItems && specItems.length > 0) {
+        specItems.forEach(item => {
+          if (item) {
+            // Mouse enter - expand this card, close all others
+            item.addEventListener('mouseenter', () => {
+              const currentIsMobile = checkMobile()
+              if (!currentIsMobile) {
+                // Close all other cards first
+                specItems.forEach(i => {
+                  if (i && i !== item) {
+                    i.classList.remove('active')
+                  }
+                })
+                // Then activate this card
+                item.classList.add('active')
+              }
+            })
+            
+            // Mouse leave - close this card
+            item.addEventListener('mouseleave', () => {
+              const currentIsMobile = checkMobile()
+              if (!currentIsMobile) {
+                item.classList.remove('active')
+              }
+            })
+          }
+        })
+      }
+      
       // Initial setup
       setupIntersectionObserver()
       
@@ -138,6 +196,8 @@ function App() {
       const handleResize = () => {
         clearTimeout(resizeTimeout)
         resizeTimeout = setTimeout(() => {
+          // Ensure only one card is active after resize
+          ensureSingleActiveCard()
           setupIntersectionObserver()
         }, 250)
       }
