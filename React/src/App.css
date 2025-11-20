@@ -120,6 +120,85 @@ body {
   color: var(--white);
 }
 
+/* Mobile Menu Toggle Button */
+.mobile-menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+  position: relative;
+}
+
+.mobile-menu-toggle span {
+  width: 100%;
+  height: 3px;
+  background: var(--gold-light);
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.mobile-menu-toggle span.active:nth-child(1) {
+  transform: rotate(45deg) translate(8px, 8px);
+}
+
+.mobile-menu-toggle span.active:nth-child(2) {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.mobile-menu-toggle span.active:nth-child(3) {
+  transform: rotate(-45deg) translate(8px, -8px);
+}
+
+/* Mobile Navigation Menu */
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  background: var(--green-dark);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.mobile-nav.open {
+  max-height: 400px;
+  transition: max-height 0.3s ease-in;
+}
+
+.mobile-nav a {
+  display: block;
+  padding: 1rem 2rem;
+  color: var(--gold-light);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  transition: all 0.3s;
+}
+
+.mobile-nav a:last-child {
+  border-bottom: none;
+}
+
+.mobile-nav a:hover {
+  background: rgba(212, 175, 55, 0.2);
+  color: var(--white);
+  padding-right: 2.5rem;
+}
+
 /* ============================================
    Hero - Justice Scale Centered
    ============================================ */
@@ -1450,16 +1529,16 @@ body {
   }
 
   .hero-title {
-    font-size: 1.75rem;
+    font-size: 2.5rem;
     line-height: 1.3;
   }
 
   .hero-subtitle {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
   }
 
   .hero-description {
-    font-size: 0.95rem;
+    font-size: 1.1rem;
   }
 
   .hero-buttons {
@@ -1787,13 +1866,19 @@ body {
     padding: 0.875rem 1rem;
   }
 
+  .header {
+    position: relative;
+  }
+
   .header-content {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 1rem;
+    justify-content: space-between;
   }
 
   .logo-container {
     gap: 0.75rem;
+    flex: 1;
   }
 
   .company-name {
@@ -1805,17 +1890,19 @@ body {
     height: 38px;
   }
 
+  /* Hide regular nav on mobile */
   .nav {
-    width: 100%;
-    justify-content: center;
-    padding: 0.5rem 0.75rem;
-    gap: 0.25rem;
-    margin-top: 0.5rem;
+    display: none;
   }
 
-  .nav a {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.85rem;
+  /* Show mobile menu toggle button */
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  /* Show mobile nav */
+  .mobile-nav {
+    display: flex;
   }
 
   /* Footer Mobile */
@@ -1835,7 +1922,15 @@ body {
 /* Extra Small Mobile */
 @media (max-width: 480px) {
   .hero-title {
-    font-size: 1.5rem;
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.3rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
   }
 
   .section-title {

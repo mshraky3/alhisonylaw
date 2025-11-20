@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 
 function App() {
   const [notification, setNotification] = useState({ show: false, message: '' })
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const showNotification = (message) => {
     setNotification({ show: true, message })
@@ -219,6 +220,36 @@ function App() {
     }
   }, [])
 
+  // Close mobile menu when clicking outside or resizing to desktop
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (mobileMenuOpen && !e.target.closest('.header')) {
+        setMobileMenuOpen(false)
+      }
+    }
+
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setMobileMenuOpen(false)
+      }
+    }
+
+    // Prevent body scroll when menu is open
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+      document.addEventListener('click', handleClickOutside)
+      window.addEventListener('resize', handleResize)
+    } else {
+      document.body.style.overflow = ''
+    }
+
+    return () => {
+      document.body.style.overflow = ''
+      document.removeEventListener('click', handleClickOutside)
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [mobileMenuOpen])
+
   return (
     <div className="app" dir="rtl">
       {/* Header */}
@@ -235,7 +266,25 @@ function App() {
             <a href="#about">من نحن</a>
             <a href="#contact">اتصل بنا</a>
           </nav>
+          <button 
+            className="mobile-menu-toggle"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            <span className={mobileMenuOpen ? 'active' : ''}></span>
+            <span className={mobileMenuOpen ? 'active' : ''}></span>
+            <span className={mobileMenuOpen ? 'active' : ''}></span>
+          </button>
         </div>
+        {/* Mobile Menu */}
+        <nav className={`mobile-nav ${mobileMenuOpen ? 'open' : ''}`}>
+          <a href="#home" onClick={() => setMobileMenuOpen(false)}>الرئيسية</a>
+          <a href="#specializations" onClick={() => setMobileMenuOpen(false)}>التخصصات</a>
+          <a href="#services" onClick={() => setMobileMenuOpen(false)}>الخدمات</a>
+          <a href="#about" onClick={() => setMobileMenuOpen(false)}>من نحن</a>
+          <a href="#contact" onClick={() => setMobileMenuOpen(false)}>اتصل بنا</a>
+        </nav>
       </header>
 
       {/* Hero Section */}
