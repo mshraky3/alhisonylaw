@@ -3,29 +3,114 @@ import { useEffect } from 'react'
 
 function App() {
   useEffect(() => {
+    // Check if mobile device (shared for both sections)
+    const checkMobile = () => window.innerWidth <= 768 || 'ontouchstart' in window
+    let isMobile = checkMobile()
+    
     // Services accordion functionality
     const serviceItems = document.querySelectorAll('.service-modern')
+    
+    // Intersection Observer for services auto-expand on mobile when centered
+    let servicesObserver = null
+    
+    const setupServicesObserver = () => {
+      // Cleanup existing observer
+      if (servicesObserver) {
+        servicesObserver.disconnect()
+        servicesObserver = null
+      }
+      
+      const currentIsMobile = checkMobile()
+      
+      if (currentIsMobile) {
+        servicesObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            const item = entry.target
+            const rect = entry.boundingClientRect
+            const viewportHeight = window.innerHeight
+            const cardCenter = rect.top + rect.height / 2
+            const viewportCenter = viewportHeight / 2
+            const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
+            const threshold = viewportHeight * 0.25 // 25% of viewport height from center
+            
+            // If card is centered in viewport (within threshold)
+            if (entry.isIntersecting && distanceFromCenter < threshold) {
+              // Close all other items
+              serviceItems.forEach(i => {
+                if (i !== item) {
+                  i.classList.remove('active')
+                }
+              })
+              // Expand this card
+              item.classList.add('active')
+            }
+          })
+        }, {
+          threshold: [0, 0.25, 0.5, 0.75, 1],
+          rootMargin: '-15% 0px -15% 0px' // Focus on center 70% of viewport
+        })
+        
+        // Observe all service items
+        serviceItems.forEach(item => {
+          servicesObserver.observe(item)
+        })
+      }
+    }
+    
+    // Initial setup
+    setupServicesObserver()
+    
+    // Handle window resize for services
+    let servicesResizeTimeout
+    const handleServicesResize = () => {
+      clearTimeout(servicesResizeTimeout)
+      servicesResizeTimeout = setTimeout(() => {
+        setupServicesObserver()
+      }, 250)
+    }
+    window.addEventListener('resize', handleServicesResize)
+    
+    // Click handler for services (desktop and mobile fallback)
     serviceItems.forEach(item => {
       const header = item.querySelector('.service-modern-header')
       if (header) {
-        header.addEventListener('click', () => {
+        header.addEventListener('click', (e) => {
+          e.stopPropagation()
           const isActive = item.classList.contains('active')
-          // Close all items
-          serviceItems.forEach(i => i.classList.remove('active'))
-          // Open clicked item if it wasn't active
-          if (!isActive) {
+          // Toggle active state
+          if (isActive) {
+            item.classList.remove('active')
+          } else {
+            // Close all other items
+            serviceItems.forEach(i => {
+              if (i !== item) {
+                i.classList.remove('active')
+              }
+            })
             item.classList.add('active')
+            // On mobile, scroll to center the card
+            const currentIsMobile = checkMobile()
+            if (currentIsMobile) {
+              setTimeout(() => {
+                item.scrollIntoView({ behavior: 'smooth', block: 'center' })
+              }, 100)
+            }
           }
         })
       }
     })
-
+    
+    // Close expanded services when clicking outside (desktop only)
+    const handleServicesOutsideClick = (e) => {
+      const currentIsMobile = checkMobile()
+      if (!currentIsMobile && !e.target.closest('.service-modern')) {
+        serviceItems.forEach(item => item.classList.remove('active'))
+      }
+    }
+    document.addEventListener('click', handleServicesOutsideClick)
+    
     // Specializations functionality
     const specItems = document.querySelectorAll('.spec-item')
-    
-    // Check if mobile device
-    const checkMobile = () => window.innerWidth <= 768 || 'ontouchstart' in window
-    let isMobile = checkMobile()
     
     // Intersection Observer for auto-expand on mobile when card is centered
     let intersectionObserver = null
@@ -37,9 +122,9 @@ function App() {
         intersectionObserver = null
       }
       
-      isMobile = checkMobile()
+      const currentIsMobile = checkMobile()
       
-      if (isMobile) {
+      if (currentIsMobile) {
         intersectionObserver = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             const item = entry.target
@@ -104,7 +189,8 @@ function App() {
           })
           item.classList.add('active')
           // On mobile, scroll to center the card
-          if (isMobile) {
+          const currentIsMobile = checkMobile()
+          if (currentIsMobile) {
             setTimeout(() => {
               item.scrollIntoView({ behavior: 'smooth', block: 'center' })
             }, 100)
@@ -115,7 +201,8 @@ function App() {
 
     // Close expanded items when clicking outside (desktop only)
     const handleOutsideClick = (e) => {
-      if (!isMobile && !e.target.closest('.spec-item')) {
+      const currentIsMobile = checkMobile()
+      if (!currentIsMobile && !e.target.closest('.spec-item')) {
         specItems.forEach(item => item.classList.remove('active'))
       }
     }
@@ -126,8 +213,13 @@ function App() {
       if (intersectionObserver) {
         intersectionObserver.disconnect()
       }
+      if (servicesObserver) {
+        servicesObserver.disconnect()
+      }
       window.removeEventListener('resize', handleResize)
+      window.removeEventListener('resize', handleServicesResize)
       document.removeEventListener('click', handleOutsideClick)
+      document.removeEventListener('click', handleServicesOutsideClick)
     }
   }, [])
 
@@ -170,16 +262,37 @@ function App() {
           </div>
           <div className="hero-stats">
             <div className="stat-item">
-              <div className="stat-number">+500</div>
-              <div className="stat-label">قضية منجزة</div>
+              <div className="stat-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div className="stat-content">
+                <div className="stat-number">+500</div>
+                <div className="stat-label">قضية منجزة</div>
+              </div>
             </div>
             <div className="stat-item">
-              <div className="stat-number">10</div>
-              <div className="stat-label">سنة خبرة</div>
+              <div className="stat-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div className="stat-content">
+                <div className="stat-number">10</div>
+                <div className="stat-label">سنة خبرة</div>
+              </div>
             </div>
             <div className="stat-item">
-              <div className="stat-number">98%</div>
-              <div className="stat-label">رضا العملاء</div>
+              <div className="stat-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div className="stat-content">
+                <div className="stat-number">جميع</div>
+                <div className="stat-label">أنواع القضايا</div>
+              </div>
             </div>
           </div>
       </section>
