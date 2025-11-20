@@ -20,10 +20,75 @@ function App() {
       }
     })
 
-    // Specializations click to expand details
+    // Specializations functionality
     const specItems = document.querySelectorAll('.spec-item')
+    
+    // Check if mobile device
+    const checkMobile = () => window.innerWidth <= 768 || 'ontouchstart' in window
+    let isMobile = checkMobile()
+    
+    // Intersection Observer for auto-expand on mobile when card is centered
+    let intersectionObserver = null
+    
+    const setupIntersectionObserver = () => {
+      // Cleanup existing observer
+      if (intersectionObserver) {
+        intersectionObserver.disconnect()
+        intersectionObserver = null
+      }
+      
+      isMobile = checkMobile()
+      
+      if (isMobile) {
+        intersectionObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            const item = entry.target
+            const rect = entry.boundingClientRect
+            const viewportHeight = window.innerHeight
+            const cardCenter = rect.top + rect.height / 2
+            const viewportCenter = viewportHeight / 2
+            const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
+            const threshold = viewportHeight * 0.25 // 25% of viewport height from center
+            
+            // If card is centered in viewport (within threshold)
+            if (entry.isIntersecting && distanceFromCenter < threshold) {
+              // Close all other items
+              specItems.forEach(i => {
+                if (i !== item) {
+                  i.classList.remove('active')
+                }
+              })
+              // Expand this card
+              item.classList.add('active')
+            }
+          })
+        }, {
+          threshold: [0, 0.25, 0.5, 0.75, 1],
+          rootMargin: '-15% 0px -15% 0px' // Focus on center 70% of viewport
+        })
+        
+        // Observe all spec items
+        specItems.forEach(item => {
+          intersectionObserver.observe(item)
+        })
+      }
+    }
+    
+    // Initial setup
+    setupIntersectionObserver()
+    
+    // Handle window resize
+    let resizeTimeout
+    const handleResize = () => {
+      clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(() => {
+        setupIntersectionObserver()
+      }, 250)
+    }
+    window.addEventListener('resize', handleResize)
+    
+    // Click handler for desktop (and as fallback for mobile)
     specItems.forEach(item => {
-      // Click handler for mobile and desktop
       item.addEventListener('click', (e) => {
         e.stopPropagation()
         const isActive = item.classList.contains('active')
@@ -38,23 +103,32 @@ function App() {
             }
           })
           item.classList.add('active')
+          // On mobile, scroll to center the card
+          if (isMobile) {
+            setTimeout(() => {
+              item.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            }, 100)
+          }
         }
       })
-
-      // Prevent hover expansion on touch devices
-      if ('ontouchstart' in window) {
-        item.addEventListener('touchstart', (e) => {
-          // Touch devices use click only
-        })
-      }
     })
 
-    // Close expanded items when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.spec-item')) {
+    // Close expanded items when clicking outside (desktop only)
+    const handleOutsideClick = (e) => {
+      if (!isMobile && !e.target.closest('.spec-item')) {
         specItems.forEach(item => item.classList.remove('active'))
       }
-    })
+    }
+    document.addEventListener('click', handleOutsideClick)
+    
+    // Cleanup
+    return () => {
+      if (intersectionObserver) {
+        intersectionObserver.disconnect()
+      }
+      window.removeEventListener('resize', handleResize)
+      document.removeEventListener('click', handleOutsideClick)
+    }
   }, [])
 
   return (
