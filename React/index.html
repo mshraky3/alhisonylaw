@@ -73,16 +73,46 @@
     <link rel="canonical" href="https://alhisonylaw.com/" />
 
     <!-- Favicon - Comprehensive setup for search engines -->
+    <!-- Primary favicon - Google prefers .ico format for search results -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <!-- Fallback to PNG logo if .ico not available -->
+    <link rel="icon" type="image/png" href="/logo_without_bg.png" />
+    <link rel="icon" type="image/png" sizes="any" href="/logo_without_bg.png" />
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/logo_without_bg.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/logo_without_bg.png" />
+
+    <!-- Web Manifest -->
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#ffffff" />
 
-    <!-- Fallback favicon using existing logo -->
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" href="/logo_without_bg.png" />
+    <!-- Additional favicon formats for better compatibility -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/logo_without_bg.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/logo_without_bg.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="/logo_without_bg.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="/logo_without_bg.png"
+    />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
