@@ -24,7 +24,7 @@ export const translations = {
       titleHighlight: 'العدالة',
       titleRest: 'والتميز في الخدمة القانونية',
       subtitle: 'نقدم خدمات قانونية متميزة في المملكة العربية السعودية',
-      description: 'نحن فريق من المحامين المتمرسين ملتزمون بتقديم أفضل الخدمات القانونية والاستشارات القانونية لعملائنا الكرام في مختلف المجالات القانونية',
+      description: 'نحن فريق من المحامين الممارسين ملتزمون بتقديم أفضل الخدمات القانونية والاستشارات القانونية لعملائنا الكرام في مختلف المجالات القانونية',
       ctaButton: 'احجز استشارة',
       whatsappMessage: 'السلام عليكم، أرغب في حجز استشارة قانونية',
       stats: {
@@ -36,100 +36,96 @@ export const translations = {
     },
     // Specializations
     specializations: {
-      badge: 'قطاعات التخصص',
+      badge: 'المحاكم المختصة',
       title: 'مجالات الممارسة القانونية',
-      description: 'نختص في مختلف المجالات القانونية لتلبية احتياجاتك',
+      description: 'نترافع أمام جميع المحاكم في المملكة العربية السعودية، بما في ذلك جميع درجات القضاء: المحاكم الابتدائية، محاكم الاستئناف، محاكم التنفيذ، والمحكمة العليا',
       items: {
-        personal: {
-          title: 'الأفراد والأحوال الشخصية',
-          preview: 'قضايا الأحوال الشخصية والمدنية',
+        personalStatus: {
+          title: 'محكمة الأحوال الشخصية',
+          preview: 'نترافع في قضايا الأسرة والأحوال الشخصية',
           details: [
-            { label: 'قضايا الأحوال الشخصية:', text: 'الطلاق، الخلع، فسخ النكاح، الحضانة والزيارة، النفقات، وتقسيم الميراث.' },
-            { label: 'القضايا المدنية والحقوقية:', text: 'المطالبات المالية، التعويضات عن الأضرار، ونزاعات الأراضي.' }
-          ]
+            { label: 'قضايا الزواج والفرقة:', text: 'نمثل عملائنا في قضايا الزواج، الطلاق، الخلع، فسخ النكاح، وإثبات الرجعة.' },
+            { label: 'قضايا الحضانة والنفقة والزيارة:', text: 'نترافع في قضايا إثبات الحضانة، المطالبة بالنفقة (للأبناء والزوجة)، وقضايا الزيارة والرؤية.' },
+            { label: 'قضايا المواريث والوصايا:', text: 'نقدم خدمات قانونية في إثبات الوفاة والورثة (صك حصر الورثة)، وقسمة التركات (بما لا يزيد على 20 مليون ريال).' },
+            { label: 'قضايا الأهلية والولاية:', text: 'نمثل عملائنا في قضايا إثبات الوقف والوصية، قضايا الغيبة والفقد، والحجر على السفيه أو المجنون.' },
+            { label: 'محكمة التنفيذ:', text: 'رفع طلب التنفيذ، طلب الحجز والمنع من السفر، بيع الأصول المحجوزة. الاعتراض في السند التنفيذي، طلب مهلة أو تقسيط، رفع الحجز والمنع من السفر.' }
+          ],
+          whatsapp: 'السلام عليكم، أرغب في الاستفسار عن خدمات الترافع أمام محكمة الأحوال الشخصية'
         },
         criminal: {
-          title: 'القضايا الجنائية',
-          preview: 'الدفاع في مختلف أنواع الجرائم',
+          title: 'المحكمة الجزائية',
+          preview: 'نترافع في القضايا الجزائية والدفاع عن المتهمين',
           details: [
-            { label: 'الجرائم المعلوماتية والإلكترونية:', text: 'الاحتيال الإلكتروني، الابتزاز الإلكتروني، اختراق الأنظمة، والتشهير الإلكتروني.' },
-            { label: 'جرائم الاعتداء:', text: 'قضايا الاعتداء البدني، الاعتداء على النفس، التهديد، والتحرش.' },
-            { label: 'جرائم الأموال:', text: 'السرقة، النصب والاحتيال، خيانة الأمانة، والاختلاس.' },
-            { label: 'جرائم المخدرات:', text: 'الدفاع في قضايا الاتجار والحيازة والاستخدام.' },
-            { label: 'جرائم الفساد المالي:', text: 'الرشوة، غسيل الأموال، التهرب الضريبي، والاستغلال الوظيفي.' },
-            { label: 'جرائم الأمن:', text: 'قضايا الأمن الوطني، الإرهاب، والتحريض على الفتنة.' }
-          ]
+            { label: 'الجرائم الكبرى الموجبة للتوقيف:', text: 'نمثل عملائنا في قضايا القتل، الاعتداء على النفس والمال، السرقة، قضايا المخدرات، وجرائم التزوير.' },
+            { label: 'الجرائم الأخرى (التعزيرية):', text: 'نترافع في قضايا الاعتداء الجسدي (الضرب)، جرائم الشيكات بدون رصيد، وقضايا السب والقذف.' },
+            { label: 'الجرائم المعلوماتية:', text: 'نقدم خدمات الدفاع في قضايا التحرش، التشهير عبر الإنترنت، والاحتيال الإلكتروني.' },
+            { label: 'محكمة التنفيذ:', text: 'رفع طلب التنفيذ، طلب الحجز والمنع من السفر، بيع الأصول المحجوزة. الاعتراض في السند التنفيذي، طلب مهلة أو تقسيط، رفع الحجز والمنع من السفر.' }
+          ],
+          whatsapp: 'السلام عليكم، أرغب في الاستفسار عن خدمات الترافع أمام المحكمة الجزائية'
         },
-        business: {
-          title: 'قطاع الأعمال والشركات',
-          preview: 'القضايا التجارية والمالية',
+        general: {
+          title: 'المحكمة العامة',
+          preview: 'نترافع في القضايا المدنية والعقارية',
           details: [
-            { label: 'القضايا التجارية:', text: 'المنازعات بين الشركاء، قضايا الإفلاس والتصفية، الأوراق التجارية، والمنافسة غير المشروعة.' },
-            { label: 'القضايا المالية والمصرفية:', text: 'المنازعات مع البنوك وشركات التمويل، منازعات الأسهم والسوق المالية.' },
-            { label: 'القضايا العمالية:', text: 'صياغة لوائح تنظيم العمل، المنازعات العمالية (فصل تعسفي، أجور، مكافأة نهاية الخدمة).' },
-            { label: 'الملكية الفكرية:', text: 'حماية العلامات التجارية، براءات الاختراع، حقوق المؤلف والنشر، والأسرار التجارية.' }
-          ]
+            { label: 'القضايا العقارية:', text: 'نمثل عملائنا في النزاعات على الملكية، إخلاء العقار (إذا لم تكن إيجاراً تجارياً أو سكنياً خاضعاً لمحكمة التنفيذ)، وقسمة العقارات (إذا زادت التركة عن 20 مليون ريال).' },
+            { label: 'القضايا الحقوقية:', text: 'نترافع في قضايا المطالبة بالديون (غير التجارية)، المطالبة بالتعويضات (المدنية غير العمالية أو الإدارية)، وقضايا المقاولات.' },
+            { label: 'محكمة التنفيذ:', text: 'رفع طلب التنفيذ، طلب الحجز والمنع من السفر، بيع الأصول المحجوزة. الاعتراض في السند التنفيذي، طلب مهلة أو تقسيط، رفع الحجز والمنع من السفر.' }
+          ],
+          whatsapp: 'السلام عليكم، أرغب في الاستفسار عن خدمات الترافع أمام المحكمة العامة'
         },
-        realEstate: {
-          title: 'العقارات والمقاولات',
-          preview: 'نزاعات العقارات والإنشاءات',
+        commercial: {
+          title: 'المحكمة التجارية',
+          preview: 'نترافع في المنازعات التجارية وقضايا الشركات',
           details: [
-            { label: 'القضايا العقارية:', text: 'نزاعات الملكية، دعاوى الإخلاء، منازعات الإيجار، والمساهمات العقارية.' },
-            { label: 'قضايا المقاولات والإنشاءات:', text: 'النزاعات الفنية والهندسية، عقود "فيديك"، ومنازعات المطورين العقاريين.' }
-          ]
+            { label: 'المنازعات بين التجار:', text: 'نمثل عملائنا في الخلافات الناتجة عن العقود التجارية، وقضايا الأوراق التجارية (الكمبيالات والسندات لأمر إذا كانت تجارية).' },
+            { label: 'قضايا الشركات:', text: 'نترافع في النزاعات بين الشركاء، قضايا تصفية وإفلاس الشركات، والمنازعات المتعلقة بالعلامات التجارية وبراءات الاختراع.' },
+            { label: 'دعاوى البنوك والتمويل:', text: 'نقدم خدمات قانونية في النزاعات الناشئة عن عقود التمويل (الإقراض والاستثمار) إذا كان أحد أطرافها تاجراً أو مصرفاً.' },
+            { label: 'محكمة التنفيذ:', text: 'رفع طلب التنفيذ، طلب الحجز والمنع من السفر، بيع الأصول المحجوزة. الاعتراض في السند التنفيذي، طلب مهلة أو تقسيط، رفع الحجز والمنع من السفر.' }
+          ],
+          whatsapp: 'السلام عليكم، أرغب في الاستفسار عن خدمات الترافع أمام المحكمة التجارية'
+        },
+        labor: {
+          title: 'المحكمة العمالية',
+          preview: 'نترافع في قضايا العمل والمنازعات العمالية',
+          details: [
+            { label: 'المنازعات الفردية:', text: 'نمثل عملائنا في قضايا المطالبة بالأجور والمستحقات العمالية، التعويض عن الفصل غير المشروع، وإصابات العمل.' },
+            { label: 'النزاعات الجماعية:', text: 'نترافع في الخلافات المتعلقة بتطبيق نظام العمل واللوائح الداخلية للمنشأة.' },
+            { label: 'محكمة التنفيذ:', text: 'رفع طلب التنفيذ، طلب الحجز والمنع من السفر، بيع الأصول المحجوزة. الاعتراض في السند التنفيذي، طلب مهلة أو تقسيط، رفع الحجز والمنع من السفر.' }
+          ],
+          whatsapp: 'السلام عليكم، أرغب في الاستفسار عن خدمات الترافع أمام المحكمة العمالية'
         },
         administrative: {
-          title: 'القضاء الإداري والحكومي',
-          preview: 'الترافع أمام الديوان واللجان',
+          title: 'المحكمة الإدارية (ديوان المظالم)',
+          preview: 'نترافع في القضايا الإدارية ضد الجهات الحكومية',
           details: [
-            { label: 'القضايا الإدارية:', text: 'الترافع أمام ديوان المظالم، إلغاء القرارات الإدارية، والتعويض من الجهات الحكومية.' },
-            { label: 'الزكاة والضريبة:', text: 'الاعتراضات أمام لجان الزكاة والضريبة والجمارك.' }
-          ]
+            { label: 'قضايا الحقوق الوظيفية:', text: 'نمثل عملائنا في الاعتراض على القرارات الإدارية (كالترقية، النقل، الفصل)، ودعاوى إلغاء القرارات الإدارية.' },
+            { label: 'دعاوى التعويض:', text: 'نترافع في قضايا المطالبة بالتعويض عن الأضرار التي سببتها جهة إدارية للمتضرر.' },
+            { label: 'قضايا العقود الإدارية:', text: 'نقدم خدمات قانونية في النزاعات المتعلقة بعقود التوريد والمقاولات التي تكون الدولة طرفاً فيها.' },
+            { label: 'محكمة التنفيذ:', text: 'رفع طلب التنفيذ، طلب الحجز والمنع من السفر، بيع الأصول المحجوزة. الاعتراض في السند التنفيذي، طلب مهلة أو تقسيط، رفع الحجز والمنع من السفر.' }
+          ],
+          whatsapp: 'السلام عليكم، أرغب في الاستفسار عن خدمات الترافع أمام المحكمة الإدارية (ديوان المظالم)'
         },
-        insurance: {
-          title: 'قضايا التأمين',
-          preview: 'منازعات التأمين والمطالبات',
+        appeal: {
+          title: 'محكمة الاستئناف',
+          preview: 'نترافع في الطعون على أحكام المحاكم الابتدائية',
           details: [
-            { label: 'منازعات التأمين:', text: 'المنازعات مع شركات التأمين (تأمين طبي، تأمين مركبات، تأمين أضرار، تأمين حياة).' },
-            { label: 'المطالبات التأمينية:', text: 'متابعة مطالبات التأمين ورفض المطالبات غير المبررة.' },
-            { label: 'التأمين التجاري:', text: 'منازعات التأمين على الممتلكات والمسؤولية المدنية للشركات.' }
-          ]
+            { label: 'الطعون في الأحكام الجزائية:', text: 'نمثل عملائنا في الطعن على أحكام المحكمة الجزائية الابتدائية في جميع أنواع الجرائم أمام محكمة الاستئناف.' },
+            { label: 'الطعون في الأحكام المدنية:', text: 'نترافع في الطعون على أحكام المحاكم العامة والتجارية والعمالية ومحاكم الأحوال الشخصية أمام محكمة الاستئناف.' },
+            { label: 'الطعون في الأحكام الإدارية:', text: 'نقدم خدمات قانونية في الطعن على أحكام المحكمة الإدارية (ديوان المظالم) الابتدائية أمام محكمة الاستئناف.' },
+            { label: 'محكمة التنفيذ:', text: 'رفع طلب التنفيذ، طلب الحجز والمنع من السفر، بيع الأصول المحجوزة. الاعتراض في السند التنفيذي، طلب مهلة أو تقسيط، رفع الحجز والمنع من السفر.' }
+          ],
+          whatsapp: 'السلام عليكم، أرغب في الاستفسار عن خدمات الترافع أمام محكمة الاستئناف'
         },
-        medical: {
-          title: 'القانون الطبي والمسؤولية الطبية',
-          preview: 'قضايا الأخطاء الطبية وحقوق المرضى',
+        supreme: {
+          title: 'المحكمة العليا',
+          preview: 'نترافع في الطعون على أحكام محاكم الاستئناف',
           details: [
-            { label: 'قضايا الأخطاء الطبية:', text: 'الدفاع عن الأطباء والمراكز الطبية في قضايا الأخطاء الطبية.' },
-            { label: 'حقوق المرضى:', text: 'تمثيل المرضى في قضايا التعويض عن الأضرار الطبية.' },
-            { label: 'التراخيص الطبية:', text: 'استخراج التراخيص الطبية والاعتراض على قرارات الهيئة السعودية للتخصصات الصحية.' }
-          ]
-        },
-        consumer: {
-          title: 'قضايا المستهلك وحماية المستهلك',
-          preview: 'حماية حقوق المستهلكين',
-          details: [
-            { label: 'منازعات المستهلكين:', text: 'تمثيل المستهلكين في منازعاتهم مع التجار والشركات.' },
-            { label: 'قضايا الجودة والضمان:', text: 'المطالبة بحقوق الضمان وضمان الجودة للمنتجات والخدمات.' },
-            { label: 'الإعلانات المضللة:', text: 'قضايا الإعلانات الكاذبة والممارسات التجارية غير العادلة.' }
-          ]
-        },
-        cyber: {
-          title: 'الأمن السيبراني وحماية البيانات',
-          preview: 'الجرائم الإلكترونية وحماية البيانات',
-          details: [
-            { label: 'قضايا الجرائم الإلكترونية:', text: 'الدفاع في قضايا الجرائم المعلوماتية والاحتيال الإلكتروني.' },
-            { label: 'حماية البيانات:', text: 'الامتثال لنظام حماية البيانات الشخصية والخصوصية.' },
-            { label: 'الابتزاز الإلكتروني:', text: 'معالجة قضايا الابتزاز والتهديد الإلكتروني.' }
-          ]
-        },
-        transport: {
-          title: 'قضايا النقل والمواصلات',
-          preview: 'حوادث المركبات والنقل',
-          details: [
-            { label: 'حوادث المركبات:', text: 'قضايا الحوادث المرورية والتعويضات.' },
-            { label: 'النقل الجوي:', text: 'منازعات شركات الطيران والركاب.' },
-            { label: 'النقل البحري:', text: 'قضايا الشحن البحري والمنازعات التجارية البحرية.' }
-          ]
+            { label: 'الطعون في الأحكام النهائية:', text: 'نمثل عملائنا في الطعن على أحكام محاكم الاستئناف في القضايا التي تتجاوز قيمتها المحددة قانوناً أو في المسائل القانونية المهمة أمام المحكمة العليا.' },
+            { label: 'توحيد الأحكام:', text: 'نترافع في قضايا توحيد الأحكام لضمان توحيد تطبيق القانون في جميع المحاكم من خلال مراجعة الأحكام المتناقضة.' },
+            { label: 'التفسير القضائي:', text: 'نقدم خدمات قانونية في القضايا التي تتطلب تفسير النصوص القانونية أمام المحكمة العليا.' },
+            { label: 'محكمة التنفيذ:', text: 'رفع طلب التنفيذ، طلب الحجز والمنع من السفر، بيع الأصول المحجوزة. الاعتراض في السند التنفيذي، طلب مهلة أو تقسيط، رفع الحجز والمنع من السفر.' }
+          ],
+          whatsapp: 'السلام عليكم، أرغب في الاستفسار عن خدمات الترافع أمام المحكمة العليا'
         }
       }
     },
@@ -216,17 +212,17 @@ export const translations = {
     about: {
       badge: 'من نحن',
       title: 'شركة قانونية رائدة في المملكة',
-      description1: 'شركة صالح الحيسوني للمحاماة هي شركة قانونية رائدة في المملكة العربية السعودية، يتمتع بخبرة تزيد عن 10 سنوات في مختلف المجالات القانونية. نحن ملتزمون بتقديم خدمات قانونية عالية الجودة تتماشى مع أفضل المعايير المهنية.',
-      description2: 'فريقنا من المحامين المتمرسين يعمل بجد لضمان حماية حقوق عملائنا وتحقيق أفضل النتائج في قضاياهم. نؤمن بالشفافية والالتزام والتميز في كل ما نقدمه.',
-      description3: 'نخدم عملائنا من مكتبين استراتيجيين: مكتبنا في الرياض ومكتبنا في القصيم، مما يمكننا من تقديم خدماتنا القانونية في مختلف أنحاء المملكة بكفاءة عالية.',
-      officesTitle: 'نخدم عملائنا من مكتبين استراتيجيين:',
-      officesText: 'مكتبنا في الرياض ومكتبنا في القصيم، مما يمكننا من تقديم خدماتنا القانونية في مختلف أنحاء المملكة بكفاءة عالية.',
+      description1: 'حين يجتمع السعي للعدالة مع الخبرة، وحين يجتمع التفاني بالعمل مع الفهم العميق للنظام، تنتج القوة القانونية التي يطمئن إليها الجميع.',
+      description2: 'يتميز فريق شركة صالح عويض الحيسوني للمحاماة بالعمل بكل جهد في خدمة العدالة، ونمتلك القدرة على ممارسة مختلف الأنشطة القانونية أمام جميع الجهات القضائية على اختلاف درجاتها ومسمياتها. وتُمكّننا خبرتنا العميقة من معالجة القضايا المعقدة بكل سرية واحتراف لعملائنا الكرام.',
+      description3: 'مما يجعلنا وجهة موثوقة لمن يبحث عن حلول قانونية صحيحة واستشارات تُقدَّم بكل سرية ومعرفة راسخة.',
+      officesTitle: 'نسعد بخدمة عملاءنا الكرام عبر فرعين استراتيجيين في منطقة الرياض ومنطقة القصيم، إضافة إلى التواصل والتوكيل عن بعد دون الحاجة لزيارة فروع الشركة مما يمنحنا قدرة واسعة على الوصول وتلبية احتياجات عملائنا في مختلف مناطق المملكة.',
+      officesText: '',
       features: {
         experience: 'خبرة واسعة في القانون السعودي',
         team: 'فريق محترف ومتمرس',
         service: 'خدمة عملاء متميزة'
       },
-      visualTitle: 'العدالة أولاً'
+      visualTitle: 'شركة صالح الحيسوني'
     },
     // Contact
     contact: {
@@ -237,6 +233,8 @@ export const translations = {
       email: 'البريد الإلكتروني',
       location: 'الموقع',
       locationText: 'الرياض | القصيم  المملكة العربية السعودية',
+      riyadhOffice: 'مكتب الرياض',
+      qassimOffice: 'مكتب القصيم',
       whatsappButton: 'تواصل عبر واتساب',
       emailButton: 'أرسل بريد إلكتروني',
       copyPhone: 'تم نسخ رقم الهاتف',
@@ -288,100 +286,96 @@ export const translations = {
     },
     // Specializations
     specializations: {
-      badge: 'Specialization Sectors',
+      badge: 'Competent Courts',
       title: 'Legal Practice Areas',
-      description: 'We specialize in various legal fields to meet your needs',
+      description: 'We litigate before all courts in the Kingdom of Saudi Arabia, including all levels of the judiciary: primary courts, courts of appeal, execution courts, and the Supreme Court',
       items: {
-        personal: {
-          title: 'Individuals and Personal Status',
-          preview: 'Personal status and civil cases',
+        personalStatus: {
+          title: 'Personal Status Court',
+          preview: 'We litigate in family and personal status cases',
           details: [
-            { label: 'Personal Status Cases:', text: 'Divorce, khula, annulment of marriage, custody and visitation, alimony, and inheritance division.' },
-            { label: 'Civil and Rights Cases:', text: 'Financial claims, compensation for damages, and land disputes.' }
-          ]
+            { label: 'Marriage and Separation Cases:', text: 'We represent our clients in cases of marriage, divorce, khula, annulment of marriage, and proof of reconciliation.' },
+            { label: 'Custody, Alimony and Visitation Cases:', text: 'We litigate in cases of proof of custody, alimony claims (for children and wife), and visitation and access cases.' },
+            { label: 'Inheritance and Wills Cases:', text: 'We provide legal services in proof of death and heirs (heir enumeration certificate), and estate division (not exceeding 20 million riyals).' },
+            { label: 'Capacity and Guardianship Cases:', text: 'We represent our clients in cases of proof of endowments and wills, cases of absence and loss, and guardianship over the prodigal or insane.' },
+            { label: 'Execution Court:', text: 'We execute Personal Status Court rulings (alimony, custody, and other enforceable rulings) before the Execution Court.' }
+          ],
+          whatsapp: 'Hello, I would like to inquire about litigation services before the Personal Status Court'
         },
         criminal: {
-          title: 'Criminal Cases',
-          preview: 'Defense in various types of crimes',
+          title: 'Criminal Court',
+          preview: 'We litigate in criminal cases and defend the accused',
           details: [
-            { label: 'Cyber and Electronic Crimes:', text: 'Electronic fraud, electronic extortion, system hacking, and electronic defamation.' },
-            { label: 'Assault Crimes:', text: 'Physical assault cases, assault on persons, threats, and harassment.' },
-            { label: 'Financial Crimes:', text: 'Theft, fraud and deception, breach of trust, and embezzlement.' },
-            { label: 'Drug Crimes:', text: 'Defense in cases of trafficking, possession, and use.' },
-            { label: 'Financial Corruption Crimes:', text: 'Bribery, money laundering, tax evasion, and job exploitation.' },
-            { label: 'Security Crimes:', text: 'National security cases, terrorism, and incitement to sedition.' }
-          ]
+            { label: 'Major Crimes Requiring Detention:', text: 'We represent our clients in cases of murder, assault on persons and property, theft, drug cases, and forgery crimes.' },
+            { label: 'Other Crimes (Discretionary):', text: 'We litigate in cases of physical assault (beating), bounced check crimes, and defamation and slander cases.' },
+            { label: 'Cyber Crimes:', text: 'We provide defense services in cases of harassment, online defamation, and electronic fraud.' },
+            { label: 'Execution Court:', text: 'We execute Criminal Court rulings (fines, compensations, and other enforceable rulings) before the Execution Court.' }
+          ],
+          whatsapp: 'Hello, I would like to inquire about litigation services before the Criminal Court'
         },
-        business: {
-          title: 'Business and Corporate Sector',
-          preview: 'Commercial and financial cases',
+        general: {
+          title: 'General Court',
+          preview: 'We litigate in civil and real estate cases',
           details: [
-            { label: 'Commercial Cases:', text: 'Disputes between partners, bankruptcy and liquidation cases, commercial papers, and unfair competition.' },
-            { label: 'Financial and Banking Cases:', text: 'Disputes with banks and financing companies, stock and financial market disputes.' },
-            { label: 'Labor Cases:', text: 'Drafting labor regulations, labor disputes (unfair dismissal, wages, end-of-service benefits).' },
-            { label: 'Intellectual Property:', text: 'Protection of trademarks, patents, copyrights, and trade secrets.' }
-          ]
+            { label: 'Real Estate Cases:', text: 'We represent our clients in ownership disputes, property eviction (if not commercial or residential rental subject to execution court), and property division (if estate exceeds 20 million riyals).' },
+            { label: 'Rights Cases:', text: 'We litigate in cases of debt claims (non-commercial), compensation claims (civil, non-labor or administrative), and construction cases.' },
+            { label: 'Execution Court:', text: 'We execute General Court rulings (property evictions, financial compensations, and other enforceable rulings) before the Execution Court.' }
+          ],
+          whatsapp: 'Hello, I would like to inquire about litigation services before the General Court'
         },
-        realEstate: {
-          title: 'Real Estate and Construction',
-          preview: 'Real estate and construction disputes',
+        commercial: {
+          title: 'Commercial Court',
+          preview: 'We litigate in commercial disputes and company cases',
           details: [
-            { label: 'Real Estate Cases:', text: 'Ownership disputes, eviction lawsuits, rental disputes, and real estate contributions.' },
-            { label: 'Construction and Engineering Cases:', text: 'Technical and engineering disputes, FIDIC contracts, and real estate developer disputes.' }
-          ]
+            { label: 'Disputes Between Merchants:', text: 'We represent our clients in disputes arising from commercial contracts, and commercial paper cases (bills of exchange and promissory notes if commercial).' },
+            { label: 'Company Cases:', text: 'We litigate in disputes between partners, company liquidation and bankruptcy cases, and disputes related to trademarks and patents.' },
+            { label: 'Banking and Financing Lawsuits:', text: 'We provide legal services in disputes arising from financing contracts (lending and investment) if one of the parties is a merchant or bank.' },
+            { label: 'Execution Court:', text: 'We execute Commercial Court rulings (commercial debts, commercial papers, and other enforceable rulings) before the Execution Court.' }
+          ],
+          whatsapp: 'Hello, I would like to inquire about litigation services before the Commercial Court'
+        },
+        labor: {
+          title: 'Labor Court',
+          preview: 'We litigate in labor cases and employment disputes',
+          details: [
+            { label: 'Individual Disputes:', text: 'We represent our clients in cases of claims for wages and employee benefits, compensation for unfair dismissal, and work injuries.' },
+            { label: 'Collective Disputes:', text: 'We litigate in disputes related to the application of labor law and internal regulations of establishments.' },
+            { label: 'Execution Court:', text: 'We execute Labor Court rulings (delayed wages, labor compensations, and other enforceable rulings) before the Execution Court.' }
+          ],
+          whatsapp: 'Hello, I would like to inquire about litigation services before the Labor Court'
         },
         administrative: {
-          title: 'Administrative and Governmental Judiciary',
-          preview: 'Litigation before the Board and committees',
+          title: 'Administrative Court (Board of Grievances)',
+          preview: 'We litigate in administrative cases against government entities',
           details: [
-            { label: 'Administrative Cases:', text: 'Litigation before the Board of Grievances, cancellation of administrative decisions, and compensation from government agencies.' },
-            { label: 'Zakat and Tax:', text: 'Appeals before Zakat, Tax and Customs committees.' }
-          ]
+            { label: 'Employment Rights Cases:', text: 'We represent our clients in appeals against administrative decisions (such as promotion, transfer, dismissal), and lawsuits to cancel administrative decisions.' },
+            { label: 'Compensation Lawsuits:', text: 'We litigate in cases of claims for compensation for damages caused by an administrative entity to the affected party.' },
+            { label: 'Administrative Contract Cases:', text: 'We provide legal services in disputes related to supply and construction contracts where the state is a party.' },
+            { label: 'Execution Court:', text: 'We execute Administrative Court rulings (administrative compensations, restoration of employment rights, and other enforceable rulings) before the Execution Court.' }
+          ],
+          whatsapp: 'Hello, I would like to inquire about litigation services before the Administrative Court (Board of Grievances)'
         },
-        insurance: {
-          title: 'Insurance Cases',
-          preview: 'Insurance disputes and claims',
+        appeal: {
+          title: 'Court of Appeal',
+          preview: 'We litigate in appeals against primary court rulings',
           details: [
-            { label: 'Insurance Disputes:', text: 'Disputes with insurance companies (medical insurance, vehicle insurance, damage insurance, life insurance).' },
-            { label: 'Insurance Claims:', text: 'Following up on insurance claims and rejecting unjustified claims.' },
-            { label: 'Commercial Insurance:', text: 'Disputes over property insurance and corporate civil liability.' }
-          ]
+            { label: 'Criminal Appeals:', text: 'We represent our clients in appeals against Criminal Court primary rulings in all types of crimes before the Court of Appeal.' },
+            { label: 'Civil Appeals:', text: 'We litigate in appeals against General, Commercial, Labor, and Personal Status Court rulings before the Court of Appeal.' },
+            { label: 'Administrative Appeals:', text: 'We provide legal services in appeals against Administrative Court (Board of Grievances) primary rulings before the Court of Appeal.' },
+            { label: 'Execution Court:', text: 'We execute final Court of Appeal rulings (all types of enforceable rulings) before the Execution Court.' }
+          ],
+          whatsapp: 'Hello, I would like to inquire about litigation services before the Court of Appeal'
         },
-        medical: {
-          title: 'Medical Law and Medical Liability',
-          preview: 'Medical malpractice cases and patient rights',
+        supreme: {
+          title: 'Supreme Court',
+          preview: 'We litigate in appeals against Court of Appeal rulings',
           details: [
-            { label: 'Medical Malpractice Cases:', text: 'Defense of doctors and medical centers in medical malpractice cases.' },
-            { label: 'Patient Rights:', text: 'Representation of patients in compensation cases for medical damages.' },
-            { label: 'Medical Licenses:', text: 'Obtaining medical licenses and appealing decisions of the Saudi Commission for Health Specialties.' }
-          ]
-        },
-        consumer: {
-          title: 'Consumer Cases and Consumer Protection',
-          preview: 'Protection of consumer rights',
-          details: [
-            { label: 'Consumer Disputes:', text: 'Representation of consumers in their disputes with merchants and companies.' },
-            { label: 'Quality and Warranty Cases:', text: 'Claiming warranty rights and quality assurance for products and services.' },
-            { label: 'Misleading Advertisements:', text: 'Cases of false advertisements and unfair commercial practices.' }
-          ]
-        },
-        cyber: {
-          title: 'Cybersecurity and Data Protection',
-          preview: 'Electronic crimes and data protection',
-          details: [
-            { label: 'Electronic Crime Cases:', text: 'Defense in cases of cybercrimes and electronic fraud.' },
-            { label: 'Data Protection:', text: 'Compliance with the Personal Data Protection Law and privacy.' },
-            { label: 'Electronic Extortion:', text: 'Handling cases of extortion and electronic threats.' }
-          ]
-        },
-        transport: {
-          title: 'Transportation and Traffic Cases',
-          preview: 'Vehicle accidents and transportation',
-          details: [
-            { label: 'Vehicle Accidents:', text: 'Traffic accident cases and compensation.' },
-            { label: 'Air Transport:', text: 'Disputes between airlines and passengers.' },
-            { label: 'Maritime Transport:', text: 'Maritime shipping cases and commercial maritime disputes.' }
-          ]
+            { label: 'Final Appeals:', text: 'We represent our clients in appeals against Court of Appeal rulings in cases exceeding the legally specified value or important legal matters before the Supreme Court.' },
+            { label: 'Unification of Rulings:', text: 'We litigate in cases of unification of rulings to ensure uniform application of law across all courts by reviewing conflicting rulings.' },
+            { label: 'Judicial Interpretation:', text: 'We provide legal services in cases that require interpretation of legal texts before the Supreme Court.' },
+            { label: 'Execution Court:', text: 'We execute final Supreme Court rulings (all types of enforceable rulings) before the Execution Court.' }
+          ],
+          whatsapp: 'Hello, I would like to inquire about litigation services before the Supreme Court'
         }
       }
     },
@@ -478,7 +472,7 @@ export const translations = {
         team: 'Professional and experienced team',
         service: 'Distinguished customer service'
       },
-      visualTitle: 'Justice First'
+      visualTitle: 'Al-Haysoni Law Firm'
     },
     // Contact
     contact: {
@@ -489,6 +483,8 @@ export const translations = {
       email: 'Email',
       location: 'Location',
       locationText: 'Riyadh | Qassim, Kingdom of Saudi Arabia',
+      riyadhOffice: 'Riyadh Office',
+      qassimOffice: 'Qassim Office',
       whatsappButton: 'Contact via WhatsApp',
       emailButton: 'Send Email',
       copyPhone: 'Phone number copied',

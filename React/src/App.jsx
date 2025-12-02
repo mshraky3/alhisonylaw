@@ -45,14 +45,14 @@ function App() {
   // Update document title and meta tags based on language
   useEffect(() => {
     document.title = language === 'ar' 
-      ? 'شركة صالح الحيسوني للمحاماة | خدمات قانونية متميزة في السعودية'
+      ? 'محامي في الرياض والقصيم | شركة صالح الحيسوني للمحاماة | استشارات قانونية معتمدة'
       : 'Al-Haysoni Law Firm | Distinguished Legal Services in Saudi Arabia'
     
     // Update meta description
     const metaDescription = document.querySelector('meta[name="description"]')
     if (metaDescription) {
       metaDescription.setAttribute('content', language === 'ar'
-        ? 'شركة صالح الحيسوني للمحاماة - شركة قانونية رائدة في المملكة العربية السعودية. نقدم خدمات قانونية متكاملة: الترافع القضائي، الاستشارات القانونية، العقود، التحكيم، تأسيس الشركات، التوثيق، والتنفيذ. خبرة تزيد عن 10 سنوات في مختلف المجالات القانونية.'
+        ? 'محامي متخصص في الرياض والقصيم - شركة صالح الحيسوني للمحاماة. نقدم استشارات قانونية، محامي قضايا تجارية، محامي قضايا عمالية، محامي قضايا أسرية، محامي قضايا جنائية، محامي عقارات، محامي شركات، صياغة عقود، تحكيم، تأسيس شركات، توثيق عقاري. خبرة 10 سنوات في القانون السعودي.'
         : 'Al-Haysoni Law Firm - A leading law firm in the Kingdom of Saudi Arabia. We provide integrated legal services: litigation, legal consultations, contracts, arbitration, company formation, documentation, and execution. Over 10 years of experience in various legal fields.'
       )
     }
@@ -140,133 +140,117 @@ function App() {
       // Also setup on React render (in case items are added dynamically)
       setTimeout(setupServiceHandlers, 300)
       
-      // Specializations functionality
-      // MOBILE: Auto-expand on scroll | DESKTOP: Expand on hover only
-      const specItems = document.querySelectorAll('.spec-item')
-      let intersectionObserver = null
+      // Specializations functionality - Click only (no hover)
+      // Use event delegation for better performance and reliability
+      const specializationsSection = document.querySelector('.specializations-masonry')
       
-      const setupIntersectionObserver = () => {
-        // Cleanup existing observer
-        if (intersectionObserver) {
-          intersectionObserver.disconnect()
-          intersectionObserver = null
-        }
-        
-        const currentIsMobile = checkMobile()
-      
-        // Only set up IntersectionObserver on mobile devices
-        if (currentIsMobile && specItems && specItems.length > 0) {
-          intersectionObserver = new IntersectionObserver((entries) => {
-            try {
-              entries.forEach(entry => {
-                try {
-                  const item = entry?.target
-                  if (!item) return
-                  
-                  const rect = entry.boundingClientRect
-                  const viewportHeight = window.innerHeight
-                  const cardCenter = rect.top + rect.height / 2
-                  const viewportCenter = viewportHeight / 2
-                  const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
-                  const threshold = viewportHeight * 0.25
-                  
-                  // Auto-expand card when centered in viewport
-                  if (entry.isIntersecting && distanceFromCenter < threshold) {
-                    // Close all other items
-                    specItems.forEach(i => {
-                      if (i && i !== item) {
-                        i.classList.remove('active')
-                      }
-                    })
-                    // Expand this card
-                    item.classList.add('active')
-                  }
-                } catch (err) {
-                  console.warn('Error in IntersectionObserver entry:', err)
+      if (specializationsSection) {
+        // Remove any existing listeners by cloning the parent
+        const setupSpecClickHandler = () => {
+          const handleSpecClick = (e) => {
+            const specItem = e.target.closest('.spec-item')
+            if (!specItem) return
+            
+            // Don't prevent default if clicking on links or buttons inside
+            const isClickableChild = e.target.closest('a, button')
+            if (isClickableChild) return
+            
+            e.preventDefault()
+            e.stopPropagation()
+            
+            const isActive = specItem.classList.contains('active')
+            const allSpecItems = document.querySelectorAll('.spec-item')
+            
+            if (isActive) {
+              // Collapse this card
+              specItem.classList.remove('active')
+              specItem.setAttribute('aria-expanded', 'false')
+            } else {
+              // Close all other cards first
+              allSpecItems.forEach(item => {
+                if (item && item !== specItem) {
+                  item.classList.remove('active')
+                  item.setAttribute('aria-expanded', 'false')
                 }
               })
-            } catch (err) {
-              console.warn('Error in IntersectionObserver:', err)
+              // Then expand this card
+              specItem.classList.add('active')
+              specItem.setAttribute('aria-expanded', 'true')
+              
+              // Force reflow to ensure transition works
+              void specItem.offsetHeight
+              
+              // Smooth scroll to card if needed
+              setTimeout(() => {
+                specItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+              }, 100)
             }
-          }, {
-            threshold: [0, 0.25, 0.5, 0.75, 1],
-            rootMargin: '-15% 0px -15% 0px'
-          })
-          
-          // Observe all spec items on mobile
-          specItems.forEach(item => {
-            if (item) intersectionObserver.observe(item)
-          })
-        }
-      }
-    
-      // Desktop/Tablet: Ensure only one card expands on hover
-      const ensureSingleActiveCard = () => {
-        const currentIsMobile = checkMobile()
-        if (!currentIsMobile && specItems && specItems.length > 0) {
-          // Remove active class from all cards first
-          specItems.forEach(item => {
-            if (item) item.classList.remove('active')
-          })
-        }
-      }
-      
-      // Handle hover on desktop/tablet to ensure only one card expands
-      if (specItems && specItems.length > 0) {
-        specItems.forEach(item => {
-          if (item) {
-            // Mouse enter - expand this card, close all others
-            item.addEventListener('mouseenter', () => {
-              const currentIsMobile = checkMobile()
-              if (!currentIsMobile) {
-                // Close all other cards first
-                specItems.forEach(i => {
-                  if (i && i !== item) {
-                    i.classList.remove('active')
-                  }
-                })
-                // Then activate this card
-                item.classList.add('active')
-              }
-            })
-            
-            // Mouse leave - close this card
-            item.addEventListener('mouseleave', () => {
-              const currentIsMobile = checkMobile()
-              if (!currentIsMobile) {
-                item.classList.remove('active')
-              }
-            })
           }
-        })
+          
+          // Remove old listener if exists
+          if (specializationsSection._specClickHandler) {
+            specializationsSection.removeEventListener('click', specializationsSection._specClickHandler)
+          }
+          
+          // Add new listener
+          specializationsSection._specClickHandler = handleSpecClick
+          specializationsSection.addEventListener('click', handleSpecClick)
+          
+          // Setup keyboard support
+          const handleSpecKeydown = (e) => {
+            const specItem = e.target.closest('.spec-item')
+            if (!specItem) return
+            
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              handleSpecClick(e)
+            }
+          }
+          
+          if (specializationsSection._specKeydownHandler) {
+            specializationsSection.removeEventListener('keydown', specializationsSection._specKeydownHandler)
+          }
+          
+          specializationsSection._specKeydownHandler = handleSpecKeydown
+          specializationsSection.addEventListener('keydown', handleSpecKeydown)
+          
+          // Make all cards clickable
+          const specItems = document.querySelectorAll('.spec-item')
+          specItems.forEach(item => {
+            if (item) {
+              item.style.cursor = 'pointer'
+              item.setAttribute('role', 'button')
+              item.setAttribute('tabindex', '0')
+              if (!item.hasAttribute('aria-expanded')) {
+                item.setAttribute('aria-expanded', 'false')
+              }
+            }
+          })
+        }
+        
+        // Setup with delays to ensure DOM is ready
+        setTimeout(setupSpecClickHandler, 100)
+        setTimeout(setupSpecClickHandler, 500)
       }
-      
-      // Initial setup
-      setupIntersectionObserver()
-      
-      // Handle window resize
-      let resizeTimeout
-      const handleResize = () => {
-        clearTimeout(resizeTimeout)
-        resizeTimeout = setTimeout(() => {
-          // Ensure only one card is active after resize
-          ensureSingleActiveCard()
-          setupIntersectionObserver()
-        }, 250)
-      }
-      window.addEventListener('resize', handleResize)
     
     // Cleanup
     return () => {
       try {
-        if (intersectionObserver) {
-          intersectionObserver.disconnect()
-        }
-        window.removeEventListener('resize', handleResize)
         // Cleanup service handlers
         const servicesShowcase = document.querySelector('.services-showcase')
-        if (servicesShowcase) {
+        if (servicesShowcase && handleServiceClick) {
           servicesShowcase.removeEventListener('click', handleServiceClick)
+        }
+        
+        // Cleanup spec handlers
+        const specializationsSection = document.querySelector('.specializations-masonry')
+        if (specializationsSection) {
+          if (specializationsSection._specClickHandler) {
+            specializationsSection.removeEventListener('click', specializationsSection._specClickHandler)
+          }
+          if (specializationsSection._specKeydownHandler) {
+            specializationsSection.removeEventListener('keydown', specializationsSection._specKeydownHandler)
+          }
         }
       } catch (err) {
         console.warn('Error in cleanup:', err)
@@ -280,7 +264,7 @@ function App() {
   // Update document title, meta tags, and HTML attributes based on language
   useEffect(() => {
     document.title = language === 'ar' 
-      ? 'شركة صالح الحيسوني للمحاماة | خدمات قانونية متميزة في السعودية'
+      ? 'محامي في الرياض والقصيم | شركة صالح الحيسوني للمحاماة | استشارات قانونية معتمدة'
       : 'Al-Haysoni Law Firm | Distinguished Legal Services in Saudi Arabia'
     
     // Update meta description
@@ -291,7 +275,7 @@ function App() {
       document.head.appendChild(metaDescription)
     }
     metaDescription.setAttribute('content', language === 'ar'
-      ? 'شركة صالح الحيسوني للمحاماة - شركة قانونية رائدة في المملكة العربية السعودية. نقدم خدمات قانونية متكاملة: الترافع القضائي، الاستشارات القانونية، العقود، التحكيم، تأسيس الشركات، التوثيق، والتنفيذ. خبرة تزيد عن 10 سنوات في مختلف المجالات القانونية.'
+      ? 'محامي متخصص في الرياض والقصيم - شركة صالح الحيسوني للمحاماة. نقدم استشارات قانونية، محامي قضايا تجارية، محامي قضايا عمالية، محامي قضايا أسرية، محامي قضايا جنائية، محامي عقارات، محامي شركات، صياغة عقود، تحكيم، تأسيس شركات، توثيق عقاري. خبرة 10 سنوات في القانون السعودي.'
       : 'Al-Haysoni Law Firm - A leading law firm in the Kingdom of Saudi Arabia. We provide integrated legal services: litigation, legal consultations, contracts, arbitration, company formation, documentation, and execution. Over 10 years of experience in various legal fields.'
     )
     
@@ -351,9 +335,10 @@ function App() {
       <header className="header" role="banner">
         <div className="header-content">
           <div className="logo-container">
-            <img src="/logo_without_bg.png" alt={t.companyName} className="logo" />
+            
             <h1 className="company-name">{t.companyName}</h1>
           </div>
+          <img src="/logo_without_bg.png" alt={t.companyName} className="logo" />
           <nav className="nav">
             <a href="#home">{t.nav.home}</a>
             <a href="#specializations">{t.nav.specializations}</a>
@@ -468,19 +453,31 @@ function App() {
             <p className="section-description">{t.specializations.description}</p>
           </div>
           <div className="specializations-masonry">
-            <div className="spec-item" data-category="personal">
+            <div className="spec-item spec-large" data-category="personal-status">
               <div className="spec-visual">
                 <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/?size=100&id=qEK2pqenBa22&format=png&color=000000" alt={t.specializations.items.personal.title} className="spec-icon" />
+                <img src="https://img.icons8.com/ios-filled/100/000000/scales.png" alt={t.specializations.items.personalStatus.title} className="spec-icon" />
                 <div className="spec-number">01</div>
               </div>
               <div className="spec-content">
-                <h3>{t.specializations.items.personal.title}</h3>
-                <div className="spec-preview">{t.specializations.items.personal.preview}</div>
+                <h3>{t.specializations.items.personalStatus.title}</h3>
+                <div className="spec-preview">{t.specializations.items.personalStatus.preview}</div>
+                <div className="spec-click-hint">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                  </svg>
+                  <span>{language === 'ar' ? 'اعرف المزيد' : 'Learn more'}</span>
+                </div>
                 <div className="spec-details">
-                  {t.specializations.items.personal.details.map((detail, idx) => (
+                  {t.specializations.items.personalStatus.details.map((detail, idx) => (
                     <div key={idx} className="spec-detail-item"><strong>{detail.label}</strong> {detail.text}</div>
                   ))}
+                  <a href={`https://wa.me/966558508881?text=${encodeURIComponent(t.specializations.items.personalStatus.whatsapp)}`} target="_blank" rel="noopener noreferrer" className="service-whatsapp-button spec-whatsapp-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    {t.services.askButton}
+                  </a>
                 </div>
               </div>
             </div>
@@ -493,138 +490,190 @@ function App() {
               <div className="spec-content">
                 <h3>{t.specializations.items.criminal.title}</h3>
                 <div className="spec-preview">{t.specializations.items.criminal.preview}</div>
+                <div className="spec-click-hint">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                  </svg>
+                  <span>{language === 'ar' ? 'اعرف المزيد' : 'Learn more'}</span>
+                </div>
                 <div className="spec-details">
                   {t.specializations.items.criminal.details.map((detail, idx) => (
                     <div key={idx} className="spec-detail-item"><strong>{detail.label}</strong> {detail.text}</div>
                   ))}
+                  <a href={`https://wa.me/966558508881?text=${encodeURIComponent(t.specializations.items.criminal.whatsapp)}`} target="_blank" rel="noopener noreferrer" className="service-whatsapp-button spec-whatsapp-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    {t.services.askButton}
+                  </a>
                 </div>
               </div>
             </div>
-            <div className="spec-item spec-large" data-category="business">
+            <div className="spec-item" data-category="general">
               <div className="spec-visual">
                 <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/?size=100&id=fNBnDhvTtPhD&format=png&color=000000" alt={t.specializations.items.business.title} className="spec-icon" />
+                <img src="https://img.icons8.com/ios-filled/100/000000/courthouse.png" alt={t.specializations.items.general.title} className="spec-icon" />
                 <div className="spec-number">03</div>
               </div>
               <div className="spec-content">
-                <h3>{t.specializations.items.business.title}</h3>
-                <div className="spec-preview">{t.specializations.items.business.preview}</div>
+                <h3>{t.specializations.items.general.title}</h3>
+                <div className="spec-preview">{t.specializations.items.general.preview}</div>
+                <div className="spec-click-hint">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                  </svg>
+                  <span>{language === 'ar' ? 'اعرف المزيد' : 'Learn more'}</span>
+                </div>
                 <div className="spec-details">
-                  {t.specializations.items.business.details.map((detail, idx) => (
+                  {t.specializations.items.general.details.map((detail, idx) => (
                     <div key={idx} className="spec-detail-item"><strong>{detail.label}</strong> {detail.text}</div>
                   ))}
+                  <a href={`https://wa.me/966558508881?text=${encodeURIComponent(t.specializations.items.general.whatsapp)}`} target="_blank" rel="noopener noreferrer" className="service-whatsapp-button spec-whatsapp-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    {t.services.askButton}
+                  </a>
                 </div>
               </div>
             </div>
-            <div className="spec-item spec-large" data-category="real-estate">
+            <div className="spec-item spec-large" data-category="commercial">
               <div className="spec-visual">
                 <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/?size=100&id=49636&format=png&color=000000" alt={t.specializations.items.realEstate.title} className="spec-icon" />
+                <img src="https://img.icons8.com/?size=100&id=fNBnDhvTtPhD&format=png&color=000000" alt={t.specializations.items.commercial.title} className="spec-icon" />
                 <div className="spec-number">04</div>
               </div>
               <div className="spec-content">
-                <h3>{t.specializations.items.realEstate.title}</h3>
-                <div className="spec-preview">{t.specializations.items.realEstate.preview}</div>
+                <h3>{t.specializations.items.commercial.title}</h3>
+                <div className="spec-preview">{t.specializations.items.commercial.preview}</div>
+                <div className="spec-click-hint">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                  </svg>
+                  <span>{language === 'ar' ? 'اعرف المزيد' : 'Learn more'}</span>
+                </div>
                 <div className="spec-details">
-                  {t.specializations.items.realEstate.details.map((detail, idx) => (
+                  {t.specializations.items.commercial.details.map((detail, idx) => (
                     <div key={idx} className="spec-detail-item"><strong>{detail.label}</strong> {detail.text}</div>
                   ))}
+                  <a href={`https://wa.me/966558508881?text=${encodeURIComponent(t.specializations.items.commercial.whatsapp)}`} target="_blank" rel="noopener noreferrer" className="service-whatsapp-button spec-whatsapp-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    {t.services.askButton}
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="spec-item" data-category="labor">
+              <div className="spec-visual">
+                <div className="spec-icon-bg"></div>
+                <img src="https://img.icons8.com/ios-filled/100/000000/briefcase.png" alt={t.specializations.items.labor.title} className="spec-icon" />
+                <div className="spec-number">05</div>
+              </div>
+              <div className="spec-content">
+                <h3>{t.specializations.items.labor.title}</h3>
+                <div className="spec-preview">{t.specializations.items.labor.preview}</div>
+                <div className="spec-click-hint">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                  </svg>
+                  <span>{language === 'ar' ? 'اعرف المزيد' : 'Learn more'}</span>
+                </div>
+                <div className="spec-details">
+                  {t.specializations.items.labor.details.map((detail, idx) => (
+                    <div key={idx} className="spec-detail-item"><strong>{detail.label}</strong> {detail.text}</div>
+                  ))}
+                  <a href={`https://wa.me/966558508881?text=${encodeURIComponent(t.specializations.items.labor.whatsapp)}`} target="_blank" rel="noopener noreferrer" className="service-whatsapp-button spec-whatsapp-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    {t.services.askButton}
+                  </a>
                 </div>
               </div>
             </div>
             <div className="spec-item" data-category="administrative">
               <div className="spec-visual">
                 <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/?size=100&id=17855&format=png&color=000000" alt={t.specializations.items.administrative.title} className="spec-icon" />
-                <div className="spec-number">05</div>
+                <img src="https://img.icons8.com/ios-filled/100/000000/scales.png" alt={t.specializations.items.administrative.title} className="spec-icon" />
+                <div className="spec-number">06</div>
               </div>
               <div className="spec-content">
                 <h3>{t.specializations.items.administrative.title}</h3>
                 <div className="spec-preview">{t.specializations.items.administrative.preview}</div>
+                <div className="spec-click-hint">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                  </svg>
+                  <span>{language === 'ar' ? 'اعرف المزيد' : 'Learn more'}</span>
+                </div>
                 <div className="spec-details">
                   {t.specializations.items.administrative.details.map((detail, idx) => (
                     <div key={idx} className="spec-detail-item"><strong>{detail.label}</strong> {detail.text}</div>
                   ))}
+                  <a href={`https://wa.me/966558508881?text=${encodeURIComponent(t.specializations.items.administrative.whatsapp)}`} target="_blank" rel="noopener noreferrer" className="service-whatsapp-button spec-whatsapp-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    {t.services.askButton}
+                  </a>
                 </div>
               </div>
             </div>
-            <div className="spec-item" data-category="insurance">
+            <div className="spec-item spec-large" data-category="appeal">
               <div className="spec-visual">
                 <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/?size=100&id=hwWsopzNm7N2&format=png&color=000000" alt={t.specializations.items.insurance.title} className="spec-icon" />
-                <div className="spec-number">06</div>
-              </div>
-              <div className="spec-content">
-                <h3>{t.specializations.items.insurance.title}</h3>
-                <div className="spec-preview">{t.specializations.items.insurance.preview}</div>
-                <div className="spec-details">
-                  {t.specializations.items.insurance.details.map((detail, idx) => (
-                    <div key={idx} className="spec-detail-item"><strong>{detail.label}</strong> {detail.text}</div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="spec-item spec-large" data-category="medical">
-              <div className="spec-visual">
-                <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/?size=100&id=4011&format=png&color=000000" alt={t.specializations.items.medical.title} className="spec-icon" />
+                <img src="https://img.icons8.com/ios-filled/100/000000/scales.png" alt={t.specializations.items.appeal.title} className="spec-icon" />
                 <div className="spec-number">07</div>
               </div>
               <div className="spec-content">
-                <h3>{t.specializations.items.medical.title}</h3>
-                <div className="spec-preview">{t.specializations.items.medical.preview}</div>
+                <h3>{t.specializations.items.appeal.title}</h3>
+                <div className="spec-preview">{t.specializations.items.appeal.preview}</div>
+                <div className="spec-click-hint">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                  </svg>
+                  <span>{language === 'ar' ? 'اعرف المزيد' : 'Learn more'}</span>
+                </div>
                 <div className="spec-details">
-                  {t.specializations.items.medical.details.map((detail, idx) => (
+                  {t.specializations.items.appeal.details.map((detail, idx) => (
                     <div key={idx} className="spec-detail-item"><strong>{detail.label}</strong> {detail.text}</div>
                   ))}
+                  <a href={`https://wa.me/966558508881?text=${encodeURIComponent(t.specializations.items.appeal.whatsapp)}`} target="_blank" rel="noopener noreferrer" className="service-whatsapp-button spec-whatsapp-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    {t.services.askButton}
+                  </a>
                 </div>
               </div>
             </div>
-            <div className="spec-item" data-category="consumer">
+            <div className="spec-item spec-large" data-category="supreme">
               <div className="spec-visual">
                 <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/?size=100&id=02L7uHUVDizl&format=png&color=000000" alt={t.specializations.items.consumer.title} className="spec-icon" />
+                <img src="https://img.icons8.com/ios-filled/100/000000/courthouse.png" alt={t.specializations.items.supreme.title} className="spec-icon" />
                 <div className="spec-number">08</div>
               </div>
               <div className="spec-content">
-                <h3>{t.specializations.items.consumer.title}</h3>
-                <div className="spec-preview">{t.specializations.items.consumer.preview}</div>
-                <div className="spec-details">
-                  {t.specializations.items.consumer.details.map((detail, idx) => (
-                    <div key={idx} className="spec-detail-item"><strong>{detail.label}</strong> {detail.text}</div>
-                  ))}
+                <h3>{t.specializations.items.supreme.title}</h3>
+                <div className="spec-preview">{t.specializations.items.supreme.preview}</div>
+                <div className="spec-click-hint">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                  </svg>
+                  <span>{language === 'ar' ? 'اعرف المزيد' : 'Learn more'}</span>
                 </div>
-              </div>
-            </div>
-            <div className="spec-item" data-category="cyber">
-              <div className="spec-visual">
-                <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/ios-filled/100/1a4d3a/lock.png" alt={t.specializations.items.cyber.title} className="spec-icon" />
-                <div className="spec-number">09</div>
-              </div>
-              <div className="spec-content">
-                <h3>{t.specializations.items.cyber.title}</h3>
-                <div className="spec-preview">{t.specializations.items.cyber.preview}</div>
                 <div className="spec-details">
-                  {t.specializations.items.cyber.details.map((detail, idx) => (
+                  {t.specializations.items.supreme.details.map((detail, idx) => (
                     <div key={idx} className="spec-detail-item"><strong>{detail.label}</strong> {detail.text}</div>
                   ))}
-                </div>
-              </div>
-            </div>
-            <div className="spec-item spec-large" data-category="transport">
-              <div className="spec-visual">
-                <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/?size=100&id=JhJh1oz0GRY9&format=png&color=000000" alt={t.specializations.items.transport.title} className="spec-icon" />
-                <div className="spec-number">10</div>
-              </div>
-              <div className="spec-content">
-                <h3>{t.specializations.items.transport.title}</h3>
-                <div className="spec-preview">{t.specializations.items.transport.preview}</div>
-                <div className="spec-details">
-                  {t.specializations.items.transport.details.map((detail, idx) => (
-                    <div key={idx} className="spec-detail-item"><strong>{detail.label}</strong> {detail.text}</div>
-                  ))}
+                  <a href={`https://wa.me/966558508881?text=${encodeURIComponent(t.specializations.items.supreme.whatsapp)}`} target="_blank" rel="noopener noreferrer" className="service-whatsapp-button spec-whatsapp-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    {t.services.askButton}
+                  </a>
                 </div>
               </div>
             </div>
@@ -809,8 +858,16 @@ function App() {
                 {t.about.description2}
               </p>
               <p>
-                <strong>{t.about.officesTitle}</strong> {t.about.officesText}
+                {t.about.description3}
               </p>
+              <p>
+                {t.about.officesTitle}
+              </p>
+              {t.about.officesText && (
+                <p>
+                  {t.about.officesText}
+                </p>
+              )}
               <div className="about-features">
                 <div className="feature-item">
                   <span className="feature-check">✓</span>
@@ -848,7 +905,7 @@ function App() {
             <div className="contact-info-section">
               <div className="contact-card" onClick={() => copyToClipboard('0558508881', t.contact.copyPhone)} style={{ cursor: 'pointer' }}>
                 <div className="contact-icon-wrapper">
-                  <img src="https://img.icons8.com/ios-filled/100/1a4d3a/phone.png" alt={t.contact.phone} className="contact-icon" />
+                  <img src="https://img.icons8.com/ios-filled/100/000000/phone.png" alt={t.contact.phone} className="contact-icon" />
                 </div>
                 <h3>{t.contact.phone}</h3>
                 <p><span dir="ltr">055 8508 881</span></p>
@@ -856,7 +913,7 @@ function App() {
               
               <div className="contact-card" onClick={() => copyToClipboard('info@alhisonylaw.com', t.contact.copyEmail)} style={{ cursor: 'pointer' }}>
                 <div className="contact-icon-wrapper">
-                  <img src="https://img.icons8.com/ios-filled/100/1a4d3a/email.png" alt={t.contact.email} className="contact-icon" />
+                  <img src="https://img.icons8.com/ios-filled/100/000000/email.png" alt={t.contact.email} className="contact-icon" />
                 </div>
                 <h3>{t.contact.email}</h3>
                 <p>info@alhisonylaw.com</p>
@@ -864,7 +921,7 @@ function App() {
               
               <div className="contact-card">
                 <div className="contact-icon-wrapper">
-                  <img src="https://img.icons8.com/ios-filled/100/1a4d3a/marker.png" alt={t.contact.location} className="contact-icon" />
+                  <img src="https://img.icons8.com/ios-filled/100/000000/marker.png" alt={t.contact.location} className="contact-icon" />
                 </div>
                 <h3>{t.contact.location}</h3>
                 <p>{t.contact.locationText}</p>
@@ -897,18 +954,39 @@ function App() {
               </a>
             </div>
             
-            {/* Google Maps */}
-            <div className="contact-map">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3575.4562870555224!2d43.97568868496715!3d26.34409998337582!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjbCsDIwJzM4LjgiTiA0M8KwNTgnMjQuNiJF!5e0!3m2!1sar!2ssa!4v1763621775099!5m2!1sar!2ssa" 
-                width="100%" 
-                height="450" 
-                style={{border:0}} 
-                allowFullScreen="" 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
-                title={t.common.officeLocation}
-              ></iframe>
+            {/* Google Maps - Two Offices */}
+            <div className="contact-maps-container">
+              <div className="contact-map-wrapper">
+                <h3 className="map-office-title">{t.contact.qassimOffice}</h3>
+                <div className="contact-map">
+                  <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3575.4562870555224!2d43.97568868496715!3d26.34409998337582!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjbCsDIwJzM4LjgiTiA0M8KwNTgnMjQuNiJF!5e0!3m2!1sar!2ssa!4v1763621775099!5m2!1sar!2ssa" 
+                    width="100%" 
+                    height="450" 
+                    style={{border:0}} 
+                    allowFullScreen="" 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title={t.contact.qassimOffice}
+                  ></iframe>
+                </div>
+              </div>
+              
+              <div className="contact-map-wrapper">
+                <h3 className="map-office-title">{t.contact.riyadhOffice}</h3>
+                <div className="contact-map">
+                  <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3619.3401304986396!2d46.61019639999999!3d24.8863772!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2eef007248d377%3A0x6953edb20da9b993!2z2KfZhNmF2K3Yp9mF2Yog2YjYp9mE2YXZiNir2YIg2LXYp9mE2K0g2KfZhNit2YrYs9mI2YbZig!5e0!3m2!1sar!2ssa!4v1764689407808!5m2!1sar!2ssa" 
+                    width="100%" 
+                    height="450" 
+                    style={{border:0}} 
+                    allowFullScreen="" 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title={t.contact.riyadhOffice}
+                  ></iframe>
+                </div>
+              </div>
             </div>
           </div>
       </section>
