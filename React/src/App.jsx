@@ -957,22 +957,6 @@ function App() {
             {/* Google Maps - Two Offices */}
             <div className="contact-maps-container">
               <div className="contact-map-wrapper">
-                <h3 className="map-office-title">{t.contact.qassimOffice}</h3>
-                <div className="contact-map">
-                  <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3575.4562870555224!2d43.97568868496715!3d26.34409998337582!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjbCsDIwJzM4LjgiTiA0M8KwNTgnMjQuNiJF!5e0!3m2!1sar!2ssa!4v1763621775099!5m2!1sar!2ssa" 
-                    width="100%" 
-                    height="450" 
-                    style={{border:0}} 
-                    allowFullScreen="" 
-                    loading="lazy" 
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title={t.contact.qassimOffice}
-                  ></iframe>
-                </div>
-              </div>
-              
-              <div className="contact-map-wrapper">
                 <h3 className="map-office-title">{t.contact.riyadhOffice}</h3>
                 <div className="contact-map">
                   <iframe 
@@ -984,6 +968,22 @@ function App() {
                     loading="lazy" 
                     referrerPolicy="no-referrer-when-downgrade"
                     title={t.contact.riyadhOffice}
+                  ></iframe>
+                </div>
+              </div>
+              
+              <div className="contact-map-wrapper">
+                <h3 className="map-office-title">{t.contact.qassimOffice}</h3>
+                <div className="contact-map">
+                  <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3575.4562870555224!2d43.97568868496715!3d26.34409998337582!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjbCsDIwJzM4LjgiTiA0M8KwNTgnMjQuNiJF!5e0!3m2!1sar!2ssa!4v1763621775099!5m2!1sar!2ssa" 
+                    width="100%" 
+                    height="450" 
+                    style={{border:0}} 
+                    allowFullScreen="" 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title={t.contact.qassimOffice}
                   ></iframe>
                 </div>
               </div>
