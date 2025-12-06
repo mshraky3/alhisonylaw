@@ -456,7 +456,7 @@ function App() {
             <div className="spec-item spec-large" data-category="personal-status">
               <div className="spec-visual">
                 <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/ios-filled/100/000000/scales.png" alt={t.specializations.items.personalStatus.title} className="spec-icon" />
+                <img src="https://img.icons8.com/?size=100&id=ywULFSPkh4kI&format=png&color=000000" alt={t.specializations.items.personalStatus.title} className="spec-icon" />
                 <div className="spec-number">01</div>
               </div>
               <div className="spec-content">
@@ -484,7 +484,7 @@ function App() {
             <div className="spec-item" data-category="criminal">
               <div className="spec-visual">
                 <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/ios-filled/100/000000/scales.png" alt={t.specializations.items.criminal.title} className="spec-icon" />
+                <img src="https://img.icons8.com/?size=100&id=40216&format=png&color=000000" alt={t.specializations.items.criminal.title} className="spec-icon" />
                 <div className="spec-number">02</div>
               </div>
               <div className="spec-content">
@@ -512,7 +512,7 @@ function App() {
             <div className="spec-item" data-category="general">
               <div className="spec-visual">
                 <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/ios-filled/100/000000/courthouse.png" alt={t.specializations.items.general.title} className="spec-icon" />
+                <img src="https://img.icons8.com/?size=100&id=u3hwP-G9VHC3&format=png&color=000000" alt={t.specializations.items.general.title} className="spec-icon" />
                 <div className="spec-number">03</div>
               </div>
               <div className="spec-content">
@@ -540,7 +540,7 @@ function App() {
             <div className="spec-item spec-large" data-category="commercial">
               <div className="spec-visual">
                 <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/?size=100&id=fNBnDhvTtPhD&format=png&color=000000" alt={t.specializations.items.commercial.title} className="spec-icon" />
+                <img src="https://img.icons8.com/?size=100&id=34425&format=png&color=000000" alt={t.specializations.items.commercial.title} className="spec-icon" />
                 <div className="spec-number">04</div>
               </div>
               <div className="spec-content">
@@ -568,7 +568,7 @@ function App() {
             <div className="spec-item" data-category="labor">
               <div className="spec-visual">
                 <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/ios-filled/100/000000/briefcase.png" alt={t.specializations.items.labor.title} className="spec-icon" />
+                <img src="https://img.icons8.com/?size=100&id=4JdTM07Jsdm9&format=png&color=000000" alt={t.specializations.items.labor.title} className="spec-icon" />
                 <div className="spec-number">05</div>
               </div>
               <div className="spec-content">
@@ -596,7 +596,7 @@ function App() {
             <div className="spec-item" data-category="administrative">
               <div className="spec-visual">
                 <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/ios-filled/100/000000/scales.png" alt={t.specializations.items.administrative.title} className="spec-icon" />
+                <img src="https://img.icons8.com/?size=100&id=105297&format=png&color=000000" alt={t.specializations.items.administrative.title} className="spec-icon" />
                 <div className="spec-number">06</div>
               </div>
               <div className="spec-content">
@@ -624,7 +624,7 @@ function App() {
             <div className="spec-item spec-large" data-category="appeal">
               <div className="spec-visual">
                 <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/ios-filled/100/000000/scales.png" alt={t.specializations.items.appeal.title} className="spec-icon" />
+                <img src="https://img.icons8.com/?size=100&id=ARsQoykHv0EE&format=png&color=000000" alt={t.specializations.items.appeal.title} className="spec-icon" />
                 <div className="spec-number">07</div>
               </div>
               <div className="spec-content">
@@ -652,7 +652,7 @@ function App() {
             <div className="spec-item spec-large" data-category="supreme">
               <div className="spec-visual">
                 <div className="spec-icon-bg"></div>
-                <img src="https://img.icons8.com/ios-filled/100/000000/courthouse.png" alt={t.specializations.items.supreme.title} className="spec-icon" />
+                <img src="https://img.icons8.com/?size=100&id=uhgegGtougXJ&format=png&color=000000" alt={t.specializations.items.supreme.title} className="spec-icon" />
                 <div className="spec-number">08</div>
               </div>
               <div className="spec-content">
