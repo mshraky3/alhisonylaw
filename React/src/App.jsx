@@ -911,12 +911,12 @@ function App() {
                 <p><span dir="ltr">055 8508 881</span></p>
               </div>
               
-              <div className="contact-card" onClick={() => copyToClipboard('info@alhisonylaw.com', t.contact.copyEmail)} style={{ cursor: 'pointer' }}>
+              <div className="contact-card" onClick={() => copyToClipboard('info@alhisony.com', t.contact.copyEmail)} style={{ cursor: 'pointer' }}>
                 <div className="contact-icon-wrapper">
                   <img src="https://img.icons8.com/ios-filled/100/000000/email.png" alt={t.contact.email} className="contact-icon" />
                 </div>
                 <h3>{t.contact.email}</h3>
-                <p>info@alhisonylaw.com</p>
+                <p>info@alhisony.com</p>
               </div>
               
               <div className="contact-card">
@@ -943,7 +943,7 @@ function App() {
               </a>
               
               <a 
-                href={`mailto:info@alhisonylaw.com?subject=${encodeURIComponent(t.contact.emailSubject)}`}
+                href={`mailto:info@alhisony.com?subject=${encodeURIComponent(t.contact.emailSubject)}`}
                 className="contact-button email-button"
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -997,7 +997,7 @@ function App() {
             <h3 className="footer-title">{t.companyName}</h3>
             <div className="footer-info">
               <p className="footer-phone">{t.footer.phone} <span dir="ltr">055 8508 881</span></p>
-              <p className="footer-email">{t.footer.email} <span dir="ltr">info@alhisonylaw.com</span></p>
+              <p className="footer-email">{t.footer.email} <span dir="ltr">info@alhisony.com</span></p>
               <p className="footer-copyright">&copy; {new Date().getFullYear()} {t.footer.copyright}</p>
             </div>
           </div>
